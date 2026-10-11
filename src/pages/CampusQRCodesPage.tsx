@@ -19,16 +19,18 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useApp } from '../context/AppContext';
 import { CAMPUS_QR_TARGETS } from '../data/mockData';
 import { CampusQRTarget } from '../types';
+import { RoleLoginModal } from '../components/RoleLoginModal';
 
 interface CampusQRCodesPageProps {
   onNavigateToReport: (zoneId: string, floor?: string) => void;
 }
 
 export const CampusQRCodesPage: React.FC<CampusQRCodesPageProps> = ({ onNavigateToReport }) => {
-  const { currentRole } = useApp();
+  const { currentRole, switchRole } = useApp();
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'block-a' | 'block-b' | 'amenities'>('all');
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [activePrintTarget, setActivePrintTarget] = useState<CampusQRTarget | null>(null);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   // Authorization check: Only Green Club Members (and Admin for testing/management)
   const isAuthorized = currentRole === 'green_club' || currentRole === 'admin';
@@ -50,9 +52,24 @@ export const CampusQRCodesPage: React.FC<CampusQRCodesPageProps> = ({ onNavigate
             Campus floor and zone physical QR code generation and sticker print sheets are restricted to authorized Green Club Members for physical campus placement and monitoring.
           </p>
         </div>
-        <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-500 max-w-md mx-auto">
-          Tip: You can switch to the <strong>Green Club Member</strong> perspective using the role switcher in the header to preview and print campus stickers.
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <button
+            onClick={() => setIsLoginOpen(true)}
+            className="w-full sm:w-auto px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+          >
+            Sign In with Green Club Credentials
+          </button>
         </div>
+        <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-500 max-w-md mx-auto">
+          Tip: You can also use the role switcher in the top navigation bar to enter authorized credentials for any department.
+        </div>
+
+        <RoleLoginModal
+          isOpen={isLoginOpen}
+          targetRole="green_club"
+          onClose={() => setIsLoginOpen(false)}
+          onSuccess={role => switchRole(role)}
+        />
       </div>
     );
   }
