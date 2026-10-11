@@ -242,7 +242,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onSelectTab, onOpenSearch })
                 <Activity className="w-4 h-4 text-blue-400" /> 2. Report or Inspect
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Students report facility problems in ~1 minute, or Green Club members record structured checklist inspections.
+                Students report facility problems in ~1 minute without sign-in barriers. Green Club members record structured checklist audits.
               </p>
             </div>
 
@@ -251,10 +251,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onSelectTab, onOpenSearch })
                 3
               </div>
               <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
-                <Wrench className="w-4 h-4 text-amber-400" /> 3. Take Action
+                <Wrench className="w-4 h-4 text-amber-400" /> 3. Verify & Take Action
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Authorized staff review, set status to In Progress, execute required maintenance, and document work notes.
+                Green Club monitors verify reports on-ground to filter out false alarms, while maintenance staff address approved work orders.
               </p>
             </div>
 

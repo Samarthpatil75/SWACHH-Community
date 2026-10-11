@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { UserRole } from '../types';
 import { useApp } from '../context/AppContext';
-import { ShieldCheck, UserCheck, Wrench, GraduationCap, Globe, ChevronDown, Check } from 'lucide-react';
+import { ShieldCheck, UserCheck, Wrench, GraduationCap, ChevronDown, Check } from 'lucide-react';
 
 export const RoleSwitcher: React.FC = () => {
   const { currentRole, switchRole } = useApp();
@@ -32,16 +32,9 @@ export const RoleSwitcher: React.FC = () => {
     {
       role: 'student',
       label: 'Student / Campus Reporter',
-      badge: 'Reporter Access',
-      desc: 'Scan QR codes, report facility problems & track reference IDs',
+      badge: 'Frictionless Reporting',
+      desc: 'Scan QR codes & report issues instantly without sign-in barriers. Reports are verified by Green Club.',
       icon: <GraduationCap className="w-4 h-4 text-blue-600" />,
-    },
-    {
-      role: 'public',
-      label: 'Public Visitor',
-      badge: 'Read-Only & Public Report',
-      desc: 'Public cleanliness dashboard and facility view',
-      icon: <Globe className="w-4 h-4 text-slate-600" />,
     },
   ];
 

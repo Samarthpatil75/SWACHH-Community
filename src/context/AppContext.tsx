@@ -120,9 +120,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const currentUser: UserProfile = INITIAL_PROFILES.find(p => p.role === currentRole) || {
-    id: 'user-public',
-    fullName: currentRole === 'public' ? 'Public Visitor' : 'Campus Member',
-    email: 'guest@icem.demo',
+    id: 'user-student-default',
+    fullName: 'Campus Student / Reporter',
+    email: 'student.reporter@icem.demo',
     role: currentRole,
     isActive: true,
     createdAt: new Date().toISOString(),

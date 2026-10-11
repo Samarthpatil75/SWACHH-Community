@@ -23,17 +23,16 @@ The platform is designed around six dedicated campus facility areas:
 
 ## 👥 2. Role-Based Access Control
 
-The platform enforces four operational roles (plus public visitors):
+The platform enforces four operational roles:
 
 | Role | Permissions & Operational Scope |
 | :--- | :--- |
-| **Student / Campus Reporter** | Browse facilities, scan QR stickers, submit 1-minute issue reports with photos, receive unique reference IDs (`SW-2026-XXXX`), and track status. |
-| **Green Club Member / Monitor** | Access monitoring dashboards, execute physical inspection checklists, grade facility condition ratings, and verify maintenance resolution prior to closure. |
+| **Student / Campus Reporter** | Browse facilities, scan QR stickers, submit 1-minute issue reports with photos (no mandatory sign-in barrier), receive unique reference IDs (`SW-2026-XXXX`), and track status. |
+| **Green Club Member / Monitor** | Physical observation checklist audits, verify initial incoming student reports to filter false alarms, and conduct post-work verification audits before ticket closure. |
 | **Housekeeping / Maintenance Staff** | Review assigned work orders, update status to *In Progress*, record work notes, log completed maintenance actions, and submit completion timestamps. |
 | **College Administration / Lead Admin** | Complete operational authority: register facilities, configure campus zones, manage user permissions, assign tickets, set recurring schedules, review analytics, and export CSV reports. |
-| **Public Visitor** | View public cleanliness metrics, search monitored facilities, and submit public cleanliness observations. |
 
-*A **Demonstration Role Switcher** is built into the header to allow administrators and evaluators to test all role perspectives in live presentations.*
+*A **Demonstration Role Switcher** is built into the header to allow administrators and evaluators to test all four role perspectives in live presentations.*
 
 ---
 

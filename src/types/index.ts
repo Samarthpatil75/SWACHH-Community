@@ -1,6 +1,6 @@
 // SWACHH Community - Type Definitions matching Database Schema & Roles
 
-export type UserRole = 'admin' | 'green_club' | 'staff' | 'student' | 'public';
+export type UserRole = 'admin' | 'green_club' | 'staff' | 'student';
 
 export type DepartmentType = 
   | 'Housekeeping'

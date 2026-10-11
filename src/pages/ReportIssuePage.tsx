@@ -186,7 +186,7 @@ export const ReportIssuePage: React.FC<ReportIssuePageProps> = ({
           Report a Facility Cleanliness or Maintenance Issue
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 max-w-lg mx-auto">
-          Help The Green Club and ICEM maintenance teams identify and rectify problems promptly.
+          No sign-in required. Submissions are reviewed and verified on-ground by Green Club members before maintenance assignment, ensuring false reports are filtered out.
         </p>
       </div>
 

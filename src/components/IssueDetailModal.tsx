@@ -266,6 +266,26 @@ export const IssueDetailModal: React.FC<IssueDetailModalProps> = ({ issue, onClo
                 Available lifecycle transitions depend on your role authority.
               </div>
 
+              {/* Step 1: Upfront Report Verification (Green Club & Admin) */}
+              {(canVerifyResolution || canAssignIssues) && (issue.status === 'submitted' || issue.status === 'under_review') && (
+                <div className="p-4 rounded-xl border border-emerald-200 bg-emerald-50/50 space-y-3">
+                  <h4 className="font-bold text-emerald-950 flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-emerald-700" /> Initial Report Verification (Green Club / Admin)
+                  </h4>
+                  <p className="text-emerald-900 text-xs leading-relaxed">
+                    Student reports are submitted freely without sign-in barriers. Review this report on-ground to filter out false alarms or duplicates before assigning to maintenance teams.
+                  </p>
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    <button
+                      onClick={() => updateIssueStatus(issue.id, 'open', 'Report verified by Green Club monitor; forwarded for maintenance.')}
+                      className="px-4 py-2 bg-emerald-700 text-white rounded-lg font-semibold hover:bg-emerald-800 transition-colors flex items-center gap-1.5"
+                    >
+                      <CheckCircle2 className="w-4 h-4" /> Verify Report (Approve for Maintenance)
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* Step A: Assignment (Admin Only) */}
               {canAssignIssues && (
                 <div className="p-4 rounded-xl border border-slate-200 bg-white space-y-3">
@@ -351,11 +371,11 @@ export const IssueDetailModal: React.FC<IssueDetailModalProps> = ({ issue, onClo
                 </div>
               )}
 
-              {/* Step C: Verification (Green Club / Admin) */}
+              {/* Step C: Post-Work Verification (Green Club / Admin) */}
               {canVerifyResolution && issue.status === 'resolved_awaiting_verification' && (
                 <div className="p-4 rounded-xl border border-purple-200 bg-purple-50/50 space-y-3">
                   <h4 className="font-bold text-purple-950 flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-purple-700" /> Resolution Verification Audit
+                    <ShieldCheck className="w-4 h-4 text-purple-700" /> Post-Work Verification Audit
                   </h4>
                   <p className="text-purple-900 text-xs leading-relaxed">
                     Housekeeping/maintenance reported this issue as resolved. As an authorized monitor, inspect the facility and verify that the problem has been completely rectified.
@@ -377,16 +397,19 @@ export const IssueDetailModal: React.FC<IssueDetailModalProps> = ({ issue, onClo
                 </div>
               )}
 
-              {/* Step D: Reject or Archive (Admin Only) */}
-              {canAssignIssues && issue.status !== 'verified_closed' && (
+              {/* Step D: Reject False Report or Mark Duplicate (Green Club & Admin) */}
+              {(canAssignIssues || canVerifyResolution) && issue.status !== 'verified_closed' && (
                 <div className="p-4 rounded-xl border border-rose-100 bg-rose-50/30 space-y-2">
-                  <h4 className="font-bold text-rose-900">Administrative Rejection / Duplicate</h4>
-                  <div className="flex gap-2">
+                  <h4 className="font-bold text-rose-900">Flag False Report / Rejection / Duplicate</h4>
+                  <p className="text-[11px] text-rose-800">
+                    If this report is invalid, false, prank, or a duplicate, reject it here with a reason to prevent unnecessary maintenance dispatch.
+                  </p>
+                  <div className="flex gap-2 pt-1">
                     <input
                       type="text"
                       value={rejectionReasonInput}
                       onChange={e => setRejectionReasonInput(e.target.value)}
-                      placeholder="Reason for rejecting (e.g., duplicate report, invalid location)..."
+                      placeholder="Reason (e.g. false alarm, checked on-ground - no issue found, duplicate of SW-2026-XXXX)..."
                       className="flex-1 p-2 border border-rose-200 rounded-lg text-xs"
                     />
                     <button

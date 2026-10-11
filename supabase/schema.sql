@@ -8,7 +8,7 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 2. Define Custom Enums
-CREATE TYPE user_role_enum AS ENUM ('admin', 'green_club', 'staff', 'student', 'public');
+CREATE TYPE user_role_enum AS ENUM ('admin', 'green_club', 'staff', 'student');
 CREATE TYPE operational_status_enum AS ENUM ('operational', 'under_maintenance', 'temporarily_closed', 'out_of_service');
 CREATE TYPE condition_rating_enum AS ENUM ('good', 'satisfactory', 'needs_attention', 'poor', 'not_inspected');
 CREATE TYPE issue_priority_enum AS ENUM ('low', 'medium', 'high', 'urgent');
