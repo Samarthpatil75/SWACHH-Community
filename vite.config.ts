@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-  ],
+  ],base: '/SWACHH-Community/',
   resolve: {
     alias: {
       '@': path.resolve(process.cwd(), './src'),
