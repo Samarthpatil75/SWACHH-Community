@@ -162,19 +162,6 @@ const MainApp: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Without login, nothing is accessible to the user
-  if (!isAuthenticated) {
-    return (
-      <LoginPage
-        onLoginSuccess={(role, personnelName) => {
-          login(role, personnelName);
-        }}
-        scannedZoneId={selectedZoneId}
-        scannedFloor={selectedFloor}
-      />
-    );
-  }
-
   return (
     <div className="min-h-screen flex flex-col bg-[#f8faf9] text-slate-800 antialiased selection:bg-emerald-200 selection:text-emerald-950">
       {/* Pilot Disclaimer Banner */}

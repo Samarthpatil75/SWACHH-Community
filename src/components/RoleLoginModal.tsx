@@ -224,20 +224,33 @@ export const RoleLoginModal: React.FC<RoleLoginModalProps> = ({
   // Render modal into document.body to ensure 100% viewport centering
   return createPortal(
     <div 
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/65 backdrop-blur-xs animate-in fade-in duration-150"
-      style={{ margin: 0 }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-xs animate-in fade-in duration-150"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 9999,
+        margin: 0
+      }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <div 
-        className="w-full max-w-md bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-150 my-auto"
+        className="w-full max-w-md bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-150 my-auto max-h-[92vh] flex flex-col"
         role="dialog"
         aria-modal="true"
         aria-labelledby="login-modal-title"
       >
         {/* Header Bar with Role Theme */}
-        <div className={`p-5 ${credConfig.themeColor.bg} border-b ${credConfig.themeColor.border} flex items-start justify-between gap-3`}>
+        <div className={`p-5 ${credConfig.themeColor.bg} border-b ${credConfig.themeColor.border} flex items-start justify-between gap-3 shrink-0`}>
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-2xl bg-white shadow-xs border border-slate-200/80 shrink-0">
               {credConfig.icon}
@@ -266,7 +279,7 @@ export const RoleLoginModal: React.FC<RoleLoginModalProps> = ({
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 space-y-5">
+        <div className="p-6 space-y-5 overflow-y-auto">
           <p className="text-xs text-slate-600 leading-relaxed">
             {credConfig.description}
           </p>
