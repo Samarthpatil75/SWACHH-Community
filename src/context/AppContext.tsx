@@ -102,7 +102,7 @@ const defaultFilters: FilterState = {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  ROLE: 'swachh_role_v3',
+  ROLE: 'swachh_role_v4',
   FACILITIES: 'swachh_facilities_v3',
   ISSUES: 'swachh_issues_v3',
   SCHEDULES: 'swachh_schedules_v3',
@@ -113,16 +113,21 @@ const STORAGE_KEYS = {
 };
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // User & Role State
+  // User & Role State - Default is 'student' (Student / Campus Reporter) for visitors and QR scans
   const [currentRole, setCurrentRole] = useState<UserRole>(() => {
+    const url = typeof window !== 'undefined' ? window.location.href : '';
+    // If arriving from a physical QR scan (zoneId in URL or report route), always default to student
+    if (url.includes('zoneId=') || url.includes('#report?zoneId') || url.includes('floor=')) {
+      return 'student';
+    }
     const saved = localStorage.getItem(STORAGE_KEYS.ROLE);
-    return (saved as UserRole) || 'admin';
+    return (saved as UserRole) || 'student';
   });
 
   const currentUser: UserProfile = INITIAL_PROFILES.find(p => p.role === currentRole) || {
     id: 'user-student-default',
-    fullName: 'Campus Student / Reporter',
-    email: 'student.reporter@icem.demo',
+    fullName: 'Neha Deshmukh (Student / Reporter)',
+    email: 'neha.student@icem.demo',
     role: currentRole,
     isActive: true,
     createdAt: new Date().toISOString(),

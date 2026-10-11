@@ -9,11 +9,11 @@ export const RoleSwitcher: React.FC = () => {
 
   const rolesConfig: { role: UserRole; label: string; badge: string; desc: string; icon: React.ReactNode }[] = [
     {
-      role: 'admin',
-      label: 'College Administration / Lead Admin',
-      badge: 'Full Operational Control',
-      desc: 'Facility config, assignment, schedules, user permissions & verification',
-      icon: <ShieldCheck className="w-4 h-4 text-emerald-600" />,
+      role: 'student',
+      label: 'Student / Campus Reporter',
+      badge: 'Default • Frictionless Reporting',
+      desc: 'Scan QR codes & report issues instantly without sign-in barriers. Reports are verified by Green Club.',
+      icon: <GraduationCap className="w-4 h-4 text-blue-600" />,
     },
     {
       role: 'green_club',
@@ -30,11 +30,11 @@ export const RoleSwitcher: React.FC = () => {
       icon: <Wrench className="w-4 h-4 text-amber-600" />,
     },
     {
-      role: 'student',
-      label: 'Student / Campus Reporter',
-      badge: 'Frictionless Reporting',
-      desc: 'Scan QR codes & report issues instantly without sign-in barriers. Reports are verified by Green Club.',
-      icon: <GraduationCap className="w-4 h-4 text-blue-600" />,
+      role: 'admin',
+      label: 'College Administration / Lead Admin',
+      badge: 'Full Operational Control',
+      desc: 'Facility config, assignment, schedules, user permissions & verification',
+      icon: <ShieldCheck className="w-4 h-4 text-emerald-600" />,
     },
   ];
 

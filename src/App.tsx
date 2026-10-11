@@ -28,7 +28,7 @@ import { CampusQRCodesPage } from './pages/CampusQRCodesPage';
 import { Facility, IssueReport, FacilityCategoryKey } from './types';
 
 const MainApp: React.FC = () => {
-  const { facilities, issues } = useApp();
+  const { facilities, issues, switchRole } = useApp();
 
   // Navigation State
   const [currentTab, setCurrentTab] = useState<string>('home');
@@ -59,7 +59,10 @@ const MainApp: React.FC = () => {
 
         if (sFacId) setSelectedFacilityId(sFacId);
         if (sRef) setTrackingReference(sRef);
-        if (sZoneId) setSelectedZoneId(sZoneId);
+        if (sZoneId) {
+          setSelectedZoneId(sZoneId);
+          switchRole('student');
+        }
         if (sFloor) setSelectedFloor(sFloor);
       }
 
@@ -77,7 +80,10 @@ const MainApp: React.FC = () => {
 
         if (facId) setSelectedFacilityId(facId);
         if (refId) setTrackingReference(refId);
-        if (zoneId) setSelectedZoneId(zoneId);
+        if (zoneId) {
+          setSelectedZoneId(zoneId);
+          switchRole('student');
+        }
         if (floor) setSelectedFloor(floor);
       }
 
@@ -125,6 +131,7 @@ const MainApp: React.FC = () => {
   };
 
   const handleScanRedirect = (zoneId: string, floor?: string) => {
+    switchRole('student');
     setSelectedZoneId(zoneId);
     setSelectedFloor(floor || null);
     setSelectedFacilityId(null);
