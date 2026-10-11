@@ -154,7 +154,7 @@ export const FacilityDetailPage: React.FC<FacilityDetailPageProps> = ({
             <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600 pt-1">
               <span className="flex items-center gap-1.5 font-medium text-slate-800">
                 <MapPin className="w-4 h-4 text-emerald-600" />
-                {facility.building} • {facility.floor || 'Ground'}
+                {facility.building}{facility.floor ? ` • ${facility.floor}` : ''}
               </span>
               <span className="text-slate-400">•</span>
               <span className="text-slate-500">Zone: {facility.zoneName}</span>

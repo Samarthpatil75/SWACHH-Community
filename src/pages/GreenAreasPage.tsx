@@ -8,7 +8,9 @@ import {
   Plus, 
   Leaf, 
   ClipboardCheck,
-  Compass
+  Compass,
+  Layers,
+  Building2
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { getConditionBadge, formatDate, formatRelativeTime } from '../utils/helpers';
@@ -138,27 +140,87 @@ export const GreenAreasPage: React.FC<GreenAreasPageProps> = ({
       </div>
 
       {/* Campus Zones Directory & Coordinate Notice */}
-      <div className="bg-slate-900 rounded-3xl p-6 sm:p-8 text-white space-y-4">
-        <div className="flex items-center gap-2">
-          <Compass className="w-5 h-5 text-emerald-400" />
-          <h3 className="text-base font-bold text-white">Campus Zone Geospatial Directory</h3>
+      <div className="bg-slate-900 rounded-3xl p-6 sm:p-8 text-white space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-4">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
+              <Compass className="w-5 h-5 text-emerald-400" />
+            </div>
+            <div>
+              <h3 className="text-base sm:text-lg font-bold text-white">Campus Zone Geospatial Directory</h3>
+              <p className="text-xs text-slate-400">Authentic GPS coordinates & floor architecture across active monitoring sectors</p>
+            </div>
+          </div>
+          <span className="text-xs font-mono px-3 py-1 bg-emerald-950 text-emerald-300 border border-emerald-800/60 rounded-full w-fit">
+            5 Active Campus Zones
+          </span>
         </div>
-        <p className="text-xs text-slate-300 leading-relaxed max-w-2xl">
-          As required by Section 11, physical campus mapping utilizes authentic GPS coordinates verified for ICEM campus zones rather than speculative maps.
+
+        <p className="text-xs text-slate-300 leading-relaxed max-w-3xl">
+          Physical campus mapping utilizes authentic GPS coordinates verified for ICEM campus pilot zones. Both Avirat Block A and Avirat Block B are configured with 4 dedicated floors (1st to 4th Floor) for granular facility tracking, while Cafe Dil Se & Maggie Point, Garden & Lawns, and Library & Admin Cell operate as non-floor designated zones.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2 text-xs">
-          {zones.map(z => (
-            <div key={z.id} className="p-3 bg-slate-800/80 rounded-xl border border-slate-700 space-y-1">
-              <span className="font-bold text-white block">{z.name}</span>
-              <p className="text-[11px] text-slate-400">{z.locationDescription}</p>
-              {z.latitude && z.longitude && (
-                <div className="text-[10px] font-mono text-emerald-300 pt-1">
-                  GPS: {z.latitude.toFixed(4)}° N, {z.longitude.toFixed(4)}° E
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-1 text-xs">
+          {zones.map(z => {
+            const zoneFacilities = facilities.filter(f => f.zoneId === z.id);
+            const isFourFloors = z.floors && z.floors.length === 4;
+
+            return (
+              <div 
+                key={z.id} 
+                className="p-4 bg-slate-800/90 hover:bg-slate-800 rounded-2xl border border-slate-700/80 hover:border-emerald-500/50 transition-all space-y-3 flex flex-col justify-between"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="font-bold text-white text-sm">{z.name}</span>
+                    {isFourFloors ? (
+                      <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full shrink-0">
+                        4 Floors (1st - 4th)
+                      </span>
+                    ) : z.floor ? (
+                      <span className="text-[10px] font-medium bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full shrink-0">
+                        {z.floor}
+                      </span>
+                    ) : null}
+                  </div>
+
+                  <p className="text-[11px] text-slate-400 leading-relaxed">{z.locationDescription}</p>
+
+                  {/* Floor Breakdown for Block A & B */}
+                  {z.floors && z.floors.length > 0 && (
+                    <div className="pt-1.5 border-t border-slate-700/60">
+                      <div className="flex items-center gap-1.5 text-[10px] font-semibold text-slate-400 mb-1.5">
+                        <Layers className="w-3 h-3 text-emerald-400" />
+                        <span>Floor Breakdown ({z.floors.length} Levels):</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {z.floors.map(fl => (
+                          <span 
+                            key={fl} 
+                            className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-slate-900/90 text-emerald-200 border border-emerald-800/40"
+                          >
+                            {fl}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          ))}
+
+                <div className="pt-2 border-t border-slate-700/60 flex items-center justify-between text-[11px]">
+                  {z.latitude && z.longitude ? (
+                    <div className="text-[10px] font-mono text-emerald-300 flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-emerald-400" />
+                      <span>{z.latitude.toFixed(4)}° N, {z.longitude.toFixed(4)}° E</span>
+                    </div>
+                  ) : <span />}
+                  <span className="text-[10px] text-slate-400 font-medium">
+                    {zoneFacilities.length} {zoneFacilities.length === 1 ? 'Asset' : 'Assets'}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

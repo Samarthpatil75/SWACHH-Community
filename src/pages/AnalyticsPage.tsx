@@ -316,9 +316,9 @@ export const AnalyticsPage: React.FC = () => {
           <div className="space-y-3 text-xs leading-relaxed text-slate-600">
             <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
               <strong className="text-slate-900 block font-semibold mb-0.5">
-                • Peak Reporting Zone: Academic Block A
+                • Peak Reporting Zone: Avirat Block A
               </strong>
-              Lobby dustbin overflow and 1st-floor washroom demand account for 45% of total pilot reports.
+              1st-floor dustbin overflow and 2nd-floor washroom demand account for 45% of total pilot reports.
             </div>
 
             <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">

@@ -254,7 +254,7 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
                       <div className="flex items-center gap-1.5">
                         <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                         <span className="font-medium text-slate-800">{f.building}</span>
-                        <span>• {f.floor || 'Ground'}</span>
+                        {f.floor ? <span>• {f.floor}</span> : null}
                       </div>
                       <div className="text-[10px] text-slate-500 italic pl-5 truncate">
                         {f.locationDescription}
@@ -355,7 +355,7 @@ export const FacilitiesPage: React.FC<FacilitiesPageProps> = ({
                       </td>
                       <td className="px-4 py-3 text-slate-600">
                         <div>{f.building}</div>
-                        <div className="text-[10px] text-slate-400">{f.floor || 'Ground'}</div>
+                        {f.floor ? <div className="text-[10px] text-slate-400">{f.floor}</div> : null}
                       </td>
                       <td className="px-4 py-3">
                         <span className={`text-[10px] px-2 py-0.5 rounded-full border font-semibold ${cond.bg}`}>

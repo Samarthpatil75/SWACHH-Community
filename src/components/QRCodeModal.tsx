@@ -93,7 +93,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
                 {facility.name}
               </h4>
               <p className="text-[11px] text-slate-600">
-                {facility.building} • {facility.floor || 'Ground Floor'}
+                {facility.building}{facility.floor ? ` • ${facility.floor}` : ''}
               </p>
               <p className="text-[9px] text-slate-400 italic">
                 {facility.locationDescription}

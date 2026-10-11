@@ -126,7 +126,7 @@ export const QuickSearchModal: React.FC<QuickSearchModalProps> = ({
                           <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-0.5">
                             <span className="flex items-center gap-1">
                               <MapPin className="w-3 h-3 text-slate-400" />
-                              {f.building} • {f.floor || 'Ground'}
+                              {f.building}{f.floor ? ` • ${f.floor}` : ''}
                             </span>
                           </div>
                         </div>

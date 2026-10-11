@@ -20,7 +20,7 @@ export const NewFacilityModal: React.FC<NewFacilityModalProps> = ({
   const [categoryKey, setCategoryKey] = useState<FacilityCategoryKey>('waste_management');
   const [zoneId, setZoneId] = useState(zones[0]?.id || '');
   const [facilityCode, setFacilityCode] = useState('');
-  const [floor, setFloor] = useState('Ground Floor');
+  const [floor, setFloor] = useState(zones[0]?.floors?.[0] || '');
   const [locationDescription, setLocationDescription] = useState('');
   const [description, setDescription] = useState('');
   const [operationalStatus, setOperationalStatus] = useState<OperationalStatus>('operational');
@@ -68,6 +68,7 @@ export const NewFacilityModal: React.FC<NewFacilityModalProps> = ({
     const selectedCategory = categories.find(c => c.key === categoryKey) || categories[0];
 
     const finalCode = facilityCode.trim() || `ICEM-FAC-${Math.floor(100 + Math.random() * 900)}`;
+    const hasFloors = selectedZone.floors && selectedZone.floors.length > 0;
 
     const newFacility = addFacility({
       facilityCode: finalCode,
@@ -77,8 +78,8 @@ export const NewFacilityModal: React.FC<NewFacilityModalProps> = ({
       zoneId: selectedZone.id,
       zoneName: selectedZone.name,
       building: selectedZone.building,
-      floor,
-      locationDescription: locationDescription.trim() || `${selectedZone.name}, ${floor}`,
+      floor: hasFloors ? floor : undefined,
+      locationDescription: locationDescription.trim() || (hasFloors && floor ? `${selectedZone.name}, ${floor}` : selectedZone.name),
       description: description.trim() || 'Monitored campus asset in SWACHH Community pilot.',
       operationalStatus,
       currentCondition,
@@ -174,12 +175,21 @@ export const NewFacilityModal: React.FC<NewFacilityModalProps> = ({
               </label>
               <select
                 value={zoneId}
-                onChange={e => setZoneId(e.target.value)}
+                onChange={e => {
+                  const newZId = e.target.value;
+                  setZoneId(newZId);
+                  const selected = zones.find(z => z.id === newZId);
+                  if (selected?.floors && selected.floors.length > 0) {
+                    setFloor(selected.floors[0]);
+                  } else {
+                    setFloor('');
+                  }
+                }}
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs"
               >
                 {zones.map(z => (
                   <option key={z.id} value={z.id}>
-                    {z.name} ({z.building})
+                    {z.name} {z.floors && z.floors.length > 0 ? `(${z.floors.length} Floors: 1st - 4th)` : ''}
                   </option>
                 ))}
               </select>
@@ -187,15 +197,25 @@ export const NewFacilityModal: React.FC<NewFacilityModalProps> = ({
 
             <div>
               <label className="block text-[11px] font-bold text-slate-700 uppercase mb-1">
-                Floor / Level
+                Floor / Level {zones.find(z => z.id === zoneId)?.floors ? '*' : ''}
               </label>
-              <input
-                type="text"
-                value={floor}
-                onChange={e => setFloor(e.target.value)}
-                placeholder="e.g. Ground Floor, 2nd Floor"
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs"
-              />
+              {zones.find(z => z.id === zoneId)?.floors ? (
+                <select
+                  value={floor}
+                  onChange={e => setFloor(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-medium"
+                >
+                  {zones.find(z => z.id === zoneId)?.floors?.map(fl => (
+                    <option key={fl} value={fl}>{fl}</option>
+                  ))}
+                  <option value="Rooftop">Rooftop</option>
+                  <option value="Basement">Basement</option>
+                </select>
+              ) : (
+                <div className="w-full px-3 py-2 border border-slate-200 bg-slate-50 text-slate-500 rounded-lg text-xs italic">
+                  Not applicable (Single-level / open area)
+                </div>
+              )}
             </div>
 
             <div className="sm:col-span-2">

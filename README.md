@@ -91,7 +91,7 @@ To deploy on Supabase:
 
 ## 📋 6. Campus Pilot Requirements (For ICEM Administration)
 
-As outlined in the initiative proposal, the initial pilot is limited to selected areas (Academic Block A, Engineering Block B, Amenities Courtyard) and requests support in:
+As outlined in the initiative proposal, the initial pilot is limited to 5 selected zones (Avirat Block A [4 floors], Avirat Block B [4 floors], Cafe Dil Se & Maggie Point, Garden & Lawns, Library & Admin Cell) and requests support in:
 1. Access to selected facilities for basic observation and data collection.
 2. Coordination with housekeeping and maintenance supervisory staff.
 3. Permission to place QR code identification stickers at approved locations.

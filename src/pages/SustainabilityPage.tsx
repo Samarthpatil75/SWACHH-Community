@@ -27,7 +27,7 @@ export const SustainabilityPage: React.FC<SustainabilityPageProps> = ({
   const proposedGoals = [
     {
       title: 'Zero Unaddressed Waste Overflow within 2 Hours',
-      desc: 'Ensure reported full dustbins in academic blocks are cleared within 120 minutes during pilot operational hours.',
+      desc: 'Ensure reported full dustbins in Avirat Blocks A & B are cleared within 120 minutes during pilot operational hours.',
       progress: 85,
       target: '85% Target Met',
     },
@@ -39,7 +39,7 @@ export const SustainabilityPage: React.FC<SustainabilityPageProps> = ({
     },
     {
       title: 'Active Green Club Weekly Physical Audits',
-      desc: 'Conduct verified weekly checklist walks across Academic Blocks A & B and the Amenities Zone.',
+      desc: 'Conduct verified weekly checklist walks across Avirat Blocks A & B (4 floors each), Cafe Dil Se & Maggie Point, and Garden & Lawns.',
       progress: 90,
       target: '4 of 4 Audits Conducted',
     },

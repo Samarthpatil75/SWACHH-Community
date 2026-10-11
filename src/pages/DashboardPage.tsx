@@ -12,7 +12,8 @@ import {
   Calendar, 
   Activity,
   ArrowRight,
-  ExternalLink
+  ExternalLink,
+  QrCode
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { KPICard } from '../components/KPICard';
@@ -29,12 +30,14 @@ interface DashboardPageProps {
   onSelectFacility: (id: string) => void;
   onSelectIssue: (id: string) => void;
   onNavigateToReport: () => void;
+  onNavigateToQRCodes?: () => void;
 }
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({
   onSelectFacility,
   onSelectIssue,
   onNavigateToReport,
+  onNavigateToQRCodes,
 }) => {
   const { 
     facilities, 
@@ -129,6 +132,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
+          {(currentRole === 'green_club' || currentRole === 'admin') && onNavigateToQRCodes && (
+            <button
+              onClick={onNavigateToQRCodes}
+              className="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
+            >
+              <QrCode className="w-4 h-4 text-emerald-600" /> Campus Floor QR Codes
+            </button>
+          )}
           <button
             onClick={onNavigateToReport}
             className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"

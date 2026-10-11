@@ -40,7 +40,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
     {
       num: 1,
       title: 'Facility Access for Observations',
-      desc: 'Access to selected campus facilities (Academic Block A, Engineering Block B, Amenities) for regular physical checklist observation and baseline data collection.',
+      desc: 'Access to selected campus facilities across 5 zones (Avirat Block A [4 floors], Avirat Block B [4 floors], Cafe Dil Se & Maggie Point, Garden & Lawns, Library & Admin Cell) for regular physical checklist observation and baseline data collection.',
       status: 'Requested for Pilot',
     },
     {
@@ -178,7 +178,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             <h3 className="text-sm font-bold text-slate-900">Initial Pilot Scope</h3>
           </div>
           <p className="text-slate-600 leading-relaxed">
-            The pilot is deliberately bounded to selected locations (Academic Block A, Engineering Block B, and Amenities Courtyard) across the 6 approved categories. This ensures manageable data fidelity, authentic response verification, and immediate proof of value.
+            The pilot is deliberately bounded to 5 selected campus zones: Avirat Block A (4 floors), Avirat Block B (4 floors), Cafe Dil Se & Maggie Point, Garden & Lawns, and Library & Admin Cell across the 6 approved categories. This ensures manageable data fidelity, authentic response verification, and immediate proof of value.
           </p>
         </div>
 

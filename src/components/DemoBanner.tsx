@@ -24,7 +24,7 @@ export const DemoBanner: React.FC = () => {
             PILOT DEMO MODE
           </span>
           <span className="text-emerald-100 text-xs sm:text-sm">
-            Displaying sample data for selected pilot zones (Block A, B, Amenities). Official verified records will be integrated under ICEM administration guidance.
+            Displaying sample data for 5 ICEM pilot zones: Avirat Block A & B (4 floors: 1st - 4th), Cafe Dil Se & Maggie Point, Garden & Lawns, Library & Admin Cell.
           </span>
         </div>
 

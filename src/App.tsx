@@ -24,6 +24,7 @@ import { GreenAreasPage } from './pages/GreenAreasPage';
 import { SustainabilityPage } from './pages/SustainabilityPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
 import { AboutPage } from './pages/AboutPage';
+import { CampusQRCodesPage } from './pages/CampusQRCodesPage';
 import { Facility, IssueReport, FacilityCategoryKey } from './types';
 
 const MainApp: React.FC = () => {
@@ -32,6 +33,8 @@ const MainApp: React.FC = () => {
   // Navigation State
   const [currentTab, setCurrentTab] = useState<string>('home');
   const [selectedFacilityId, setSelectedFacilityId] = useState<string | null>(null);
+  const [selectedZoneId, setSelectedZoneId] = useState<string | null>(null);
+  const [selectedFloor, setSelectedFloor] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<FacilityCategoryKey | undefined>(undefined);
   const [trackingReference, setTrackingReference] = useState<string | undefined>(undefined);
 
@@ -43,9 +46,24 @@ const MainApp: React.FC = () => {
   const [qrFacility, setQrFacility] = useState<Facility | null>(null);
   const [detailIssue, setDetailIssue] = useState<IssueReport | null>(null);
 
-  // Handle URL hash or params (e.g. #report?facilityId=... or #facilities)
+  // Handle URL hash or params (e.g. #report?zoneId=...&floor=... or #report?facilityId=...)
   useEffect(() => {
-    const handleHashChange = () => {
+    const handleUrlState = () => {
+      // 1. Check window.location.search params
+      if (window.location.search) {
+        const sParams = new URLSearchParams(window.location.search);
+        const sFacId = sParams.get('facilityId');
+        const sRef = sParams.get('ref');
+        const sZoneId = sParams.get('zoneId');
+        const sFloor = sParams.get('floor');
+
+        if (sFacId) setSelectedFacilityId(sFacId);
+        if (sRef) setTrackingReference(sRef);
+        if (sZoneId) setSelectedZoneId(sZoneId);
+        if (sFloor) setSelectedFloor(sFloor);
+      }
+
+      // 2. Check window.location.hash
       const hash = window.location.hash.replace('#', '');
       if (!hash) return;
 
@@ -54,9 +72,13 @@ const MainApp: React.FC = () => {
         const params = new URLSearchParams(queryString);
         const facId = params.get('facilityId');
         const refId = params.get('ref');
+        const zoneId = params.get('zoneId');
+        const floor = params.get('floor');
 
         if (facId) setSelectedFacilityId(facId);
         if (refId) setTrackingReference(refId);
+        if (zoneId) setSelectedZoneId(zoneId);
+        if (floor) setSelectedFloor(floor);
       }
 
       if (route) {
@@ -64,9 +86,9 @@ const MainApp: React.FC = () => {
       }
     };
 
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    handleUrlState();
+    window.addEventListener('hashchange', handleUrlState);
+    return () => window.removeEventListener('hashchange', handleUrlState);
   }, []);
 
   // Keyboard shortcut Ctrl+K / Cmd+K for search
@@ -96,7 +118,18 @@ const MainApp: React.FC = () => {
 
   const handleReportForFacility = (facId: string) => {
     setSelectedFacilityId(facId);
+    setSelectedZoneId(null);
+    setSelectedFloor(null);
     setCurrentTab('report');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleScanRedirect = (zoneId: string, floor?: string) => {
+    setSelectedZoneId(zoneId);
+    setSelectedFloor(floor || null);
+    setSelectedFacilityId(null);
+    setCurrentTab('report');
+    window.location.hash = `#report?zoneId=${zoneId}${floor ? '&floor=' + encodeURIComponent(floor) : ''}`;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -147,6 +180,13 @@ const MainApp: React.FC = () => {
             onSelectFacility={handleOpenFacilityDetail}
             onSelectIssue={handleOpenIssueDetail}
             onNavigateToReport={() => navigateTo('report')}
+            onNavigateToQRCodes={() => navigateTo('campus-qrcodes')}
+          />
+        )}
+
+        {currentTab === 'campus-qrcodes' && (
+          <CampusQRCodesPage
+            onNavigateToReport={(zId, fl) => handleScanRedirect(zId, fl)}
           />
         )}
 
@@ -176,6 +216,12 @@ const MainApp: React.FC = () => {
         {currentTab === 'report' && (
           <ReportIssuePage
             preselectedFacilityId={selectedFacilityId || undefined}
+            preselectedZoneId={selectedZoneId || undefined}
+            preselectedFloor={selectedFloor || undefined}
+            onClearZoneSelection={() => {
+              setSelectedZoneId(null);
+              setSelectedFloor(null);
+            }}
             onNavigateToTrack={handleNavigateToTrack}
             onNavigateToDashboard={() => navigateTo('dashboard')}
           />

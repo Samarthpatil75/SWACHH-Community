@@ -13,29 +13,60 @@ import {
   RotateCcw,
   Camera,
   AlertTriangle,
-  Building2
+  Building2,
+  QrCode,
+  Sparkles,
+  Layers
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { FacilityCategoryKey, IssuePriority } from '../types';
+import { CAMPUS_QR_TARGETS } from '../data/mockData';
 
 interface ReportIssuePageProps {
   preselectedFacilityId?: string;
+  preselectedZoneId?: string;
+  preselectedFloor?: string;
+  onClearZoneSelection?: () => void;
   onNavigateToTrack: (refNumber: string) => void;
   onNavigateToDashboard: () => void;
 }
 
 export const ReportIssuePage: React.FC<ReportIssuePageProps> = ({
   preselectedFacilityId,
+  preselectedZoneId,
+  preselectedFloor,
+  onClearZoneSelection,
   onNavigateToTrack,
   onNavigateToDashboard,
 }) => {
-  const { facilities, categories, addIssueReport, issues } = useApp();
+  const { facilities, categories, addIssueReport, issues, zones } = useApp();
+
+  // Matched physical QR code target
+  const activeQrTarget = CAMPUS_QR_TARGETS.find(t => 
+    t.zoneId === preselectedZoneId && (!preselectedFloor || t.floor === preselectedFloor)
+  );
+  const activeZone = zones.find(z => z.id === preselectedZoneId);
+
+  // Filter facilities on this zone & floor
+  const zoneFloorFacilities = facilities.filter(f => {
+    if (!preselectedZoneId) return true;
+    if (f.zoneId !== preselectedZoneId) return false;
+    if (preselectedFloor && f.floor && !f.floor.toLowerCase().includes(preselectedFloor.toLowerCase())) return false;
+    return true;
+  });
+
+  const [showAllFacilities, setShowAllFacilities] = useState(false);
 
   // Wizard Step: 1 = Facility, 2 = Category, 3 = Details, 4 = Confirmation
-  const [step, setStep] = useState(preselectedFacilityId ? 2 : 1);
+  // Auto-advance to step 2 if facility or scanned QR zone/floor is provided
+  const [step, setStep] = useState((preselectedFacilityId || preselectedZoneId) ? 2 : 1);
 
   // Form Fields
-  const [facilityId, setFacilityId] = useState(preselectedFacilityId || (facilities[0]?.id || ''));
+  const [facilityId, setFacilityId] = useState(() => {
+    if (preselectedFacilityId) return preselectedFacilityId;
+    if (preselectedZoneId && zoneFloorFacilities.length > 0) return zoneFloorFacilities[0].id;
+    return facilities[0]?.id || '';
+  });
   const [categoryKey, setCategoryKey] = useState<FacilityCategoryKey>('waste_management');
   const [issueType, setIssueType] = useState('Dustbin full & overflow');
   const [title, setTitle] = useState('');
@@ -48,7 +79,7 @@ export const ReportIssuePage: React.FC<ReportIssuePageProps> = ({
   const [submittedRef, setSubmittedRef] = useState<string | null>(null);
   const [copiedRef, setCopiedRef] = useState(false);
 
-  // If preselectedFacilityId changed, sync it
+  // If preselectedFacilityId, preselectedZoneId, or preselectedFloor changed, sync it
   useEffect(() => {
     if (preselectedFacilityId) {
       setFacilityId(preselectedFacilityId);
@@ -57,8 +88,20 @@ export const ReportIssuePage: React.FC<ReportIssuePageProps> = ({
         setCategoryKey(target.categoryKey);
       }
       setStep(2);
+    } else if (preselectedZoneId) {
+      const matching = facilities.filter(f => {
+        if (f.zoneId !== preselectedZoneId) return false;
+        if (preselectedFloor && f.floor && !f.floor.toLowerCase().includes(preselectedFloor.toLowerCase())) return false;
+        return true;
+      });
+
+      if (matching.length > 0) {
+        setFacilityId(matching[0].id);
+        setCategoryKey(matching[0].categoryKey);
+      }
+      setStep(2);
     }
-  }, [preselectedFacilityId, facilities]);
+  }, [preselectedFacilityId, preselectedZoneId, preselectedFloor, facilities]);
 
   // Sub-issue types mapping
   const issueTypesMap: Record<FacilityCategoryKey, string[]> = {
@@ -190,6 +233,47 @@ export const ReportIssuePage: React.FC<ReportIssuePageProps> = ({
         </p>
       </div>
 
+      {/* Location Identified Banner if arrived via Scanned QR Code */}
+      {(activeQrTarget || preselectedZoneId) && (
+        <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border-2 border-emerald-300 rounded-2xl p-4 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in duration-200">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-emerald-700 text-white flex items-center justify-center shrink-0 shadow-xs">
+              <QrCode className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-900 bg-emerald-200/80 px-2 py-0.5 rounded border border-emerald-300">
+                  Location Identified via Scanned QR Code
+                </span>
+                {activeQrTarget && (
+                  <span className="font-mono text-[10px] font-bold text-emerald-800">
+                    {activeQrTarget.code}
+                  </span>
+                )}
+              </div>
+              <h4 className="text-sm sm:text-base font-black text-slate-900 mt-0.5">
+                {activeQrTarget?.title || (activeZone ? `${activeZone.name}${preselectedFloor ? ` — ${preselectedFloor}` : ''}` : 'Campus Floor / Zone')}
+              </h4>
+              <p className="text-[11px] text-emerald-950 font-medium">
+                {activeQrTarget?.recommendedPlacement || 'Physical QR sticker scanned on campus ground'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 self-end sm:self-center">
+            {onClearZoneSelection && (
+              <button
+                type="button"
+                onClick={onClearZoneSelection}
+                className="text-xs font-bold text-slate-600 hover:text-rose-700 hover:bg-white/80 px-3 py-1.5 rounded-xl border border-slate-200 transition-colors cursor-pointer"
+              >
+                Clear Location
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* 4-Step Progress Indicator */}
       <div className="flex items-center justify-between max-w-md mx-auto pt-2">
         {[
@@ -232,16 +316,40 @@ export const ReportIssuePage: React.FC<ReportIssuePageProps> = ({
             <div>
               <h3 className="text-base font-bold text-slate-900">Step 1: Select the Monitored Campus Facility</h3>
               <p className="text-xs text-slate-500 mt-0.5">
-                Choose the location or facility where the problem was observed.
+                Choose the specific facility or amenity where the problem was observed.
               </p>
             </div>
 
+            {/* Filter Notice when QR code zone/floor is active */}
+            {preselectedZoneId && (
+              <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex items-center gap-2 text-emerald-950 font-medium">
+                  <QrCode className="w-4 h-4 text-emerald-700 shrink-0" />
+                  <span>
+                    Location: <strong>{activeQrTarget?.title || (activeZone?.name + (preselectedFloor ? ` • ${preselectedFloor}` : ''))}</strong> ({(!showAllFacilities && zoneFloorFacilities.length > 0 ? zoneFloorFacilities.length : facilities.length)} facilities)
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowAllFacilities(!showAllFacilities)}
+                  className="text-emerald-800 hover:text-emerald-950 font-bold underline cursor-pointer text-[11px] self-start sm:self-auto"
+                >
+                  {showAllFacilities ? 'Show Scanned Floor Only' : 'Show All Campus Facilities'}
+                </button>
+              </div>
+            )}
+
             <div className="space-y-3">
               <label className="block text-xs font-bold text-slate-700 uppercase">
-                Campus Facilities ({facilities.length})
+                {preselectedZoneId && !showAllFacilities && zoneFloorFacilities.length > 0
+                  ? `Facilities on this Scanned Floor / Zone (${zoneFloorFacilities.length})`
+                  : `All Monitored Facilities (${facilities.length})`}
               </label>
               <div className="max-h-80 overflow-y-auto space-y-2 pr-1">
-                {facilities.map(f => (
+                {((preselectedZoneId && !showAllFacilities && zoneFloorFacilities.length > 0)
+                  ? zoneFloorFacilities
+                  : facilities
+                ).map(f => (
                   <div
                     key={f.id}
                     onClick={() => {
@@ -262,7 +370,7 @@ export const ReportIssuePage: React.FC<ReportIssuePageProps> = ({
                         <span className="font-bold text-slate-900 truncate">{f.name}</span>
                       </div>
                       <p className="text-[11px] text-slate-500">
-                        {f.building} • {f.floor || 'Ground'} — {f.locationDescription}
+                        {f.building}{f.floor ? ` • ${f.floor}` : ''} — {f.locationDescription}
                       </p>
                     </div>
                     {facilityId === f.id && (
@@ -290,9 +398,18 @@ export const ReportIssuePage: React.FC<ReportIssuePageProps> = ({
           <div className="space-y-6">
             <div>
               <h3 className="text-base font-bold text-slate-900">Step 2: Issue Type & Classification</h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Facility selected: <strong>{selectedFacility?.name}</strong> ({selectedFacility?.facilityCode})
-              </p>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs text-slate-500 mt-1">
+                <span>
+                  Facility selected: <strong className="text-slate-800">{selectedFacility?.name}</strong> <span className="font-mono text-emerald-800 font-bold">({selectedFacility?.facilityCode})</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setStep(1)}
+                  className="text-emerald-700 hover:text-emerald-900 font-semibold underline text-left sm:text-right cursor-pointer"
+                >
+                  Change Facility (Step 1)
+                </button>
+              </div>
             </div>
 
             {/* Duplicate warning if existing open issue on facility */}
@@ -390,6 +507,28 @@ export const ReportIssuePage: React.FC<ReportIssuePageProps> = ({
               <p className="text-xs text-slate-500 mt-0.5">
                 Provide clear observations to help maintenance staff respond effectively.
               </p>
+            </div>
+
+            {/* Selected Target Summary Pill */}
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+              <div className="space-y-0.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                  Target Facility & Campus Location
+                </span>
+                <div className="font-bold text-slate-900 text-xs">
+                  {selectedFacility?.name} <span className="font-mono text-emerald-800 font-bold">({selectedFacility?.facilityCode})</span>
+                </div>
+                <div className="text-[11px] text-slate-500">
+                  {selectedFacility?.building}{selectedFacility?.floor ? ` • ${selectedFacility.floor}` : ''} — {selectedFacility?.locationDescription}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="text-xs text-emerald-700 hover:text-emerald-900 font-semibold underline shrink-0 ml-2 cursor-pointer"
+              >
+                Change
+              </button>
             </div>
 
             <div>

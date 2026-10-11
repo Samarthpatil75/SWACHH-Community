@@ -102,14 +102,14 @@ const defaultFilters: FilterState = {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  ROLE: 'swachh_role_v1',
-  FACILITIES: 'swachh_facilities_v1',
-  ISSUES: 'swachh_issues_v1',
-  SCHEDULES: 'swachh_schedules_v1',
-  INSPECTIONS: 'swachh_inspections_v1',
-  RECORDS: 'swachh_records_v1',
-  LOGS: 'swachh_logs_v1',
-  NOTIFICATIONS: 'swachh_notifications_v1',
+  ROLE: 'swachh_role_v3',
+  FACILITIES: 'swachh_facilities_v3',
+  ISSUES: 'swachh_issues_v3',
+  SCHEDULES: 'swachh_schedules_v3',
+  INSPECTIONS: 'swachh_inspections_v3',
+  RECORDS: 'swachh_records_v3',
+  LOGS: 'swachh_logs_v3',
+  NOTIFICATIONS: 'swachh_notifications_v3',
 };
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

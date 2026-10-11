@@ -27,6 +27,7 @@ export interface CampusZone {
   name: string;
   building: string;
   floor?: string;
+  floors?: string[];
   locationDescription: string;
   latitude?: number;
   longitude?: number;
@@ -248,4 +249,16 @@ export interface FilterState {
   department: string;
   dateRange: 'all' | '7d' | '30d' | 'this_month';
   searchQuery: string;
+}
+
+export interface CampusQRTarget {
+  id: string;
+  code: string;
+  title: string;
+  zoneId: string;
+  zoneName: string;
+  building: string;
+  floor?: string;
+  description: string;
+  recommendedPlacement: string;
 }

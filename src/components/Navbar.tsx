@@ -13,7 +13,8 @@ import {
   X, 
   Search,
   Sparkles,
-  ListTodo
+  ListTodo,
+  QrCode
 } from 'lucide-react';
 import { RoleSwitcher } from './RoleSwitcher';
 import { NotificationsDrawer } from './NotificationsDrawer';
@@ -33,11 +34,16 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { currentRole } = useApp();
 
+  const isGreenClubOrAdmin = currentRole === 'green_club' || currentRole === 'admin';
+
   const navLinks = [
     { id: 'home', label: 'Home', icon: <Leaf className="w-4 h-4" /> },
     { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
     { id: 'facilities', label: 'Facilities', icon: <Building2 className="w-4 h-4" /> },
     { id: 'report', label: 'Report Issue', icon: <AlertTriangle className="w-4 h-4" />, highlight: true },
+    ...(isGreenClubOrAdmin ? [
+      { id: 'campus-qrcodes', label: 'Campus QR Hub', icon: <QrCode className="w-4 h-4 text-emerald-500" />, badge: 'Print' }
+    ] : []),
     { id: 'issues', label: 'Manage Issues', icon: <ListTodo className="w-4 h-4" /> },
     { id: 'schedules', label: 'Schedules', icon: <CalendarClock className="w-4 h-4" /> },
     { id: 'inspections', label: 'Inspections', icon: <ClipboardCheck className="w-4 h-4" /> },
@@ -105,7 +111,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="relative group">
               <button
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
-                  ['green-areas', 'analytics', 'sustainability', 'about'].includes(currentTab)
+                  ['campus-qrcodes', 'green-areas', 'analytics', 'sustainability', 'about'].includes(currentTab)
                     ? 'bg-emerald-100 text-emerald-900 font-bold'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
