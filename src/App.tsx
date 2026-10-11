@@ -25,10 +25,11 @@ import { SustainabilityPage } from './pages/SustainabilityPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
 import { AboutPage } from './pages/AboutPage';
 import { CampusQRCodesPage } from './pages/CampusQRCodesPage';
+import { LoginPage } from './pages/LoginPage';
 import { Facility, IssueReport, FacilityCategoryKey } from './types';
 
 const MainApp: React.FC = () => {
-  const { facilities, issues, switchRole } = useApp();
+  const { facilities, issues, switchRole, isAuthenticated, login } = useApp();
 
   // Navigation State
   const [currentTab, setCurrentTab] = useState<string>('home');
@@ -160,6 +161,19 @@ const MainApp: React.FC = () => {
     setCurrentTab('track');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // Without login, nothing is accessible to the user
+  if (!isAuthenticated) {
+    return (
+      <LoginPage
+        onLoginSuccess={(role, personnelName) => {
+          login(role, personnelName);
+        }}
+        scannedZoneId={selectedZoneId}
+        scannedFloor={selectedFloor}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f8faf9] text-slate-800 antialiased selection:bg-emerald-200 selection:text-emerald-950">

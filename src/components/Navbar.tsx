@@ -14,7 +14,8 @@ import {
   Search,
   Sparkles,
   ListTodo,
-  QrCode
+  QrCode,
+  LogOut
 } from 'lucide-react';
 import { RoleSwitcher } from './RoleSwitcher';
 import { NotificationsDrawer } from './NotificationsDrawer';
@@ -32,7 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenSearch,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { currentRole } = useApp();
+  const { currentRole, logout } = useApp();
 
   const isGreenClubOrAdmin = currentRole === 'green_club' || currentRole === 'admin';
 
@@ -157,6 +158,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <RoleSwitcher />
 
+            <button
+              onClick={logout}
+              className="p-2 rounded-lg text-slate-500 hover:text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer"
+              title="Sign Out (Lock Portal)"
+              aria-label="Sign Out"
+            >
+              <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+
             {/* Mobile Hamburger Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -172,8 +182,17 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-slate-200 bg-white px-4 pt-2 pb-6 space-y-1 shadow-lg animate-in slide-in-from-top-2 duration-150">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1.5">
-            Navigation Menu (Active: {currentRole.toUpperCase()})
+          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1.5 flex items-center justify-between">
+            <span>Navigation Menu (Active: {currentRole.toUpperCase()})</span>
+            <button 
+              onClick={() => {
+                setMobileMenuOpen(false);
+                logout();
+              }}
+              className="text-rose-600 hover:underline font-bold text-[10px] flex items-center gap-1 cursor-pointer"
+            >
+              <LogOut className="w-3 h-3" /> Sign Out
+            </button>
           </div>
           {navLinks.map(link => {
             const isActive = currentTab === link.id;

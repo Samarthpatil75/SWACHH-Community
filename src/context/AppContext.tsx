@@ -29,8 +29,11 @@ import {
 
 interface AppContextType {
   // Role & Auth
+  isAuthenticated: boolean;
   currentRole: UserRole;
   currentUser: UserProfile;
+  login: (role: UserRole, personnelName?: string) => void;
+  logout: () => void;
   switchRole: (role: UserRole) => void;
   canManageFacilities: boolean;
   canInspect: boolean;
@@ -113,6 +116,12 @@ const STORAGE_KEYS = {
 };
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Authentication State: Without login, the platform is restricted
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    const saved = localStorage.getItem('swachh_auth_v5');
+    return saved === 'true';
+  });
+
   // User & Role State - Default is 'student' (Student / Campus Reporter) for visitors and QR scans
   const [currentRole, setCurrentRole] = useState<UserRole>(() => {
     const url = typeof window !== 'undefined' ? window.location.href : '';
@@ -123,6 +132,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const saved = localStorage.getItem(STORAGE_KEYS.ROLE);
     return (saved as UserRole) || 'student';
   });
+
+  const login = (role: UserRole, personnelName?: string) => {
+    setIsAuthenticated(true);
+    localStorage.setItem('swachh_auth_v5', 'true');
+    setCurrentRole(role);
+    localStorage.setItem(STORAGE_KEYS.ROLE, role);
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('swachh_auth_v5');
+    setCurrentRole('student');
+    localStorage.setItem(STORAGE_KEYS.ROLE, 'student');
+  };
 
   const currentUser: UserProfile = INITIAL_PROFILES.find(p => p.role === currentRole) || {
     id: 'user-student-default',
@@ -653,6 +676,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   return (
     <AppContext.Provider
       value={{
+        isAuthenticated,
+        login,
+        logout,
         currentRole,
         currentUser,
         switchRole,

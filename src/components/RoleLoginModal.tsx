@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   ShieldCheck, 
   UserCheck, 
   Wrench, 
+  GraduationCap,
   Lock, 
   User, 
   X, 
@@ -10,13 +12,12 @@ import {
   CheckCircle2, 
   Eye, 
   EyeOff, 
-  KeyRound,
-  Sparkles
+  KeyRound 
 } from 'lucide-react';
 import { UserRole } from '../types';
 
 export interface RoleCredential {
-  role: 'green_club' | 'staff' | 'admin';
+  role: UserRole;
   roleTitle: string;
   badge: string;
   defaultName: string;
@@ -33,7 +34,29 @@ export interface RoleCredential {
   };
 }
 
-export const ROLE_CREDENTIALS: Record<'green_club' | 'staff' | 'admin', RoleCredential> = {
+export const ROLE_CREDENTIALS: Record<UserRole, RoleCredential> = {
+  student: {
+    role: 'student',
+    roleTitle: 'Student / Campus Reporter',
+    badge: 'Campus Reporting & Tracking',
+    defaultName: 'Neha Deshmukh',
+    validNames: [
+      'neha deshmukh',
+      'neha',
+      'student',
+      'neha.student@icem.demo',
+    ],
+    defaultPassword: 'student@icem',
+    passwords: ['student@icem', 'student123', 'icem2026', 'student'],
+    description: 'Allows students to report campus cleanliness issues, track resolution status, and monitor facility health.',
+    icon: <GraduationCap className="w-5 h-5 text-blue-600" />,
+    themeColor: {
+      bg: 'bg-blue-50',
+      border: 'border-blue-200',
+      text: 'text-blue-900',
+      btn: 'bg-blue-800 hover:bg-blue-900',
+    },
+  },
   green_club: {
     role: 'green_club',
     roleTitle: 'Green Club Member / Campus Monitor',
@@ -110,7 +133,7 @@ export const ROLE_CREDENTIALS: Record<'green_club' | 'staff' | 'admin', RoleCred
 
 interface RoleLoginModalProps {
   isOpen: boolean;
-  targetRole: 'green_club' | 'staff' | 'admin' | null;
+  targetRole: UserRole | null;
   onClose: () => void;
   onSuccess: (role: UserRole) => void;
 }
@@ -173,14 +196,14 @@ export const RoleLoginModal: React.FC<RoleLoginModalProps> = ({
 
     const isNameValid = 
       credConfig.validNames.some(vn => vn.toLowerCase() === trimmedName.toLowerCase()) ||
-      trimmedName.length >= 2; // Allow recognized personnel name with valid password
+      trimmedName.length >= 2;
 
     setTimeout(() => {
       setIsSubmitting(false);
 
       if (!isPasswordValid) {
         setErrorMessage(
-          `Invalid password for ${credConfig.roleTitle}. Please verify your credentials or click "Autofill Demo Credentials".`
+          `Invalid password for ${credConfig.roleTitle}. Please verify your credentials or click "Autofill".`
         );
         return;
       }
@@ -195,13 +218,20 @@ export const RoleLoginModal: React.FC<RoleLoginModalProps> = ({
       // Successful login
       onSuccess(credConfig.role);
       onClose();
-    }, 300);
+    }, 250);
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150">
+  // Render modal into document.body to ensure 100% viewport centering
+  return createPortal(
+    <div 
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/65 backdrop-blur-xs animate-in fade-in duration-150"
+      style={{ margin: 0 }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div 
-        className="w-full max-w-md bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-150"
+        className="w-full max-w-md bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-150 my-auto"
         role="dialog"
         aria-modal="true"
         aria-labelledby="login-modal-title"
@@ -245,7 +275,7 @@ export const RoleLoginModal: React.FC<RoleLoginModalProps> = ({
           <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-slate-700 flex items-center gap-1.5">
-                <KeyRound className="w-3.5 h-3.5 text-emerald-700" /> Demo Authorized Credentials
+                <KeyRound className="w-3.5 h-3.5 text-emerald-700" /> Authorized Personnel Credentials
               </span>
               <button
                 type="button"
@@ -258,11 +288,11 @@ export const RoleLoginModal: React.FC<RoleLoginModalProps> = ({
             <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-600 bg-white p-2 rounded-xl border border-slate-200/60 font-mono">
               <div>
                 <span className="text-slate-400 block text-[9px] uppercase font-sans">Name</span>
-                <span className="font-bold text-slate-800">{credConfig.defaultName}</span>
+                <span className="font-bold text-slate-800 truncate block">{credConfig.defaultName}</span>
               </div>
               <div>
                 <span className="text-slate-400 block text-[9px] uppercase font-sans">Password</span>
-                <span className="font-bold text-slate-800">{credConfig.defaultPassword}</span>
+                <span className="font-bold text-slate-800 truncate block">{credConfig.defaultPassword}</span>
               </div>
             </div>
           </div>
@@ -366,6 +396,7 @@ export const RoleLoginModal: React.FC<RoleLoginModalProps> = ({
           </form>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
