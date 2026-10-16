@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Sparkles, 
   Trash2, 
@@ -9,20 +9,141 @@ import {
   ShieldCheck, 
   CheckCircle2, 
   ArrowRight,
-  Target
+  Target,
+  Lightbulb,
+  Plus,
+  ThumbsUp,
+  MapPin,
+  Clock,
+  Check,
+  Zap,
+  Filter
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { SustainabilitySuggestionModal } from '../components/SustainabilitySuggestionModal';
+import { SustainabilitySuggestion, SuggestionCategory } from '../types';
 
 interface SustainabilityPageProps {
   onNavigateToReport: () => void;
   onNavigateToDashboard: () => void;
 }
 
+const INITIAL_COMMUNITY_SUGGESTIONS: SustainabilitySuggestion[] = [
+  {
+    id: 'sugg-01',
+    referenceNumber: 'SUGG-2026-1042',
+    title: 'Install Automated Drip Irrigation Timer for Central Lawn & Garden',
+    category: 'water_conservation',
+    categoryLabel: 'Water Conservation',
+    zoneName: 'Garden & Lawns',
+    description: 'Transition garden watering to automated early morning drip cycles (6:00 AM) to curb sidewalk water runoff and minimize mid-day evaporation losses.',
+    expectedImpact: 'Estimated to conserve 450 liters of water daily while maintaining lawn vitality.',
+    submittedBy: 'Ananya Kulkarni (SE Civil)',
+    submitterRole: 'student',
+    upvotes: 38,
+    status: 'approved_for_pilot',
+    createdAt: '2026-10-12T09:15:00Z',
+  },
+  {
+    id: 'sugg-02',
+    referenceNumber: 'SUGG-2026-1088',
+    title: 'Dedicated Crushed Can & Beverage Paper Cup Drop Bins at Cafe Dil Se',
+    category: 'waste_recycling',
+    categoryLabel: 'Waste & Recycling',
+    zoneName: 'Cafe Dil Se & Maggie Point',
+    description: 'Introduce circular aperture bins specifically for disposable hot cups and soda cans to prevent coffee dregs from soaking dry recyclable paper and reduce bin overflow.',
+    expectedImpact: 'Facilitates 100% clean sorting of over 200 daily beverage containers.',
+    submittedBy: 'Rohan Verma (TE Comp)',
+    submitterRole: 'student',
+    upvotes: 29,
+    status: 'under_review',
+    createdAt: '2026-10-14T11:30:00Z',
+  },
+  {
+    id: 'sugg-03',
+    referenceNumber: 'SUGG-2026-1120',
+    title: 'Install Tap Aerator Nozzles Across Restrooms in Avirat Block A & B',
+    category: 'water_conservation',
+    categoryLabel: 'Water Conservation',
+    zoneName: 'Avirat Block A',
+    floor: 'All Floors',
+    description: 'Retrofit standard washbasin faucets with inexpensive mist/aerator nozzles to limit splashing and maintain cleansing pressure at 35% lower water flow rate.',
+    expectedImpact: 'Estimated 35% reduction in washbasin water wastage during peak class change intervals.',
+    submittedBy: 'Aarav Sharma (Green Club Lead)',
+    submitterRole: 'green_club',
+    upvotes: 45,
+    status: 'in_discussion',
+    createdAt: '2026-10-15T14:00:00Z',
+  },
+];
+
 export const SustainabilityPage: React.FC<SustainabilityPageProps> = ({
   onNavigateToReport,
   onNavigateToDashboard,
 }) => {
   const { kpiStats } = useApp();
+  const [isSuggestionModalOpen, setIsSuggestionModalOpen] = useState(false);
+  const [suggestions, setSuggestions] = useState<SustainabilitySuggestion[]>(() => {
+    try {
+      const saved = localStorage.getItem('swachh_sustainability_suggestions');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return INITIAL_COMMUNITY_SUGGESTIONS;
+  });
+
+  const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('all');
+  const [upvotedIds, setUpvotedIds] = useState<Set<string>>(new Set());
+
+  // Sync to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('swachh_sustainability_suggestions', JSON.stringify(suggestions));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [suggestions]);
+
+  const handleSuggestionSubmitted = (newSugg: SustainabilitySuggestion) => {
+    setSuggestions(prev => [newSugg, ...prev]);
+  };
+
+  const handleToggleUpvote = (id: string) => {
+    setUpvotedIds(prev => {
+      const next = new Set(prev);
+      const isUpvoted = next.has(id);
+      if (isUpvoted) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+
+    setSuggestions(prev =>
+      prev.map(s => {
+        if (s.id === id) {
+          const hasUpvoted = upvotedIds.has(id);
+          return {
+            ...s,
+            upvotes: hasUpvoted ? Math.max(0, s.upvotes - 1) : s.upvotes + 1,
+          };
+        }
+        return s;
+      })
+    );
+  };
+
+  const filteredSuggestions = suggestions.filter(s => {
+    if (activeCategoryFilter === 'all') return true;
+    return s.category === activeCategoryFilter;
+  });
 
   const proposedGoals = [
     {
@@ -65,6 +186,18 @@ export const SustainabilityPage: React.FC<SustainabilityPageProps> = ({
         <p className="text-xs sm:text-base text-slate-600 leading-relaxed font-normal">
           How centralized digital monitoring empowers students, Green Club members, and administration to maintain an organized, hygienic, and sustainable campus environment.
         </p>
+
+        {/* Quick CTA to Open Suggestion Window */}
+        <div className="pt-2 flex justify-center">
+          <button
+            onClick={() => setIsSuggestionModalOpen(true)}
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-2xl text-xs sm:text-sm font-bold shadow-md shadow-emerald-900/20 transition-all cursor-pointer transform hover:-translate-y-0.5"
+          >
+            <Lightbulb className="w-4 h-4 text-emerald-300" />
+            <span>Submit a Green Suggestion</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {/* 6 Sustainability Pillars Grid */}
@@ -136,6 +269,167 @@ export const SustainabilityPage: React.FC<SustainabilityPageProps> = ({
         </div>
       </div>
 
+      {/* Community Green Suggestions & Proposals Section */}
+      <section className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-10 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+          <div>
+            <div className="flex items-center gap-2">
+              <Lightbulb className="w-5 h-5 text-emerald-700" />
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                Community Green Suggestions
+              </h2>
+            </div>
+            <p className="text-xs text-slate-500 mt-1">
+              Active student and faculty ideas under evaluation by Green Club monitors for future campus pilot rounds.
+            </p>
+          </div>
+
+          <button
+            onClick={() => setIsSuggestionModalOpen(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer self-start sm:self-auto"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Submit Suggestion</span>
+          </button>
+        </div>
+
+        {/* Category Filter Pills */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+          {[
+            { id: 'all', label: 'All Ideas' },
+            { id: 'waste_recycling', label: 'Waste & Recycling' },
+            { id: 'water_conservation', label: 'Water Conservation' },
+            { id: 'energy_solar', label: 'Energy & Solar' },
+            { id: 'greenery_biodiversity', label: 'Greenery' },
+            { id: 'hygiene_sanitation', label: 'Hygiene' },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveCategoryFilter(tab.id)}
+              className={`px-3 py-1.5 rounded-xl font-bold whitespace-nowrap transition-colors cursor-pointer ${
+                activeCategoryFilter === tab.id
+                  ? 'bg-emerald-800 text-white shadow-2xs'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Suggestions Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredSuggestions.map(s => {
+            const isUpvoted = upvotedIds.has(s.id);
+            const statusConfig = {
+              approved_for_pilot: {
+                label: 'Approved for Pilot',
+                bg: 'bg-emerald-50',
+                text: 'text-emerald-800',
+                border: 'border-emerald-200',
+              },
+              in_discussion: {
+                label: 'In Discussion',
+                bg: 'bg-amber-50',
+                text: 'text-amber-800',
+                border: 'border-amber-200',
+              },
+              under_review: {
+                label: 'Under Review',
+                bg: 'bg-blue-50',
+                text: 'text-blue-800',
+                border: 'border-blue-200',
+              },
+              implemented: {
+                label: 'Implemented',
+                bg: 'bg-purple-50',
+                text: 'text-purple-800',
+                border: 'border-purple-200',
+              },
+            }[s.status] || {
+              label: 'Under Review',
+              bg: 'bg-slate-50',
+              text: 'text-slate-700',
+              border: 'border-slate-200',
+            };
+
+            return (
+              <div
+                key={s.id}
+                className="p-5 rounded-2xl bg-slate-50/70 border border-slate-200/90 hover:border-emerald-300 transition-all flex flex-col justify-between space-y-4 text-xs group"
+              >
+                <div className="space-y-3">
+                  {/* Top Badges */}
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200">
+                      {s.categoryLabel}
+                    </span>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusConfig.bg} ${statusConfig.text} ${statusConfig.border}`}>
+                      {statusConfig.label}
+                    </span>
+                  </div>
+
+                  {/* Title */}
+                  <h4 className="font-bold text-slate-900 text-sm leading-snug group-hover:text-emerald-950 transition-colors">
+                    {s.title}
+                  </h4>
+
+                  {/* Location Tag */}
+                  <div className="flex items-center gap-1.5 text-slate-500 text-[11px]">
+                    <MapPin className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                    <span className="font-medium truncate">
+                      {s.zoneName}
+                      {s.floor && ` • ${s.floor}`}
+                    </span>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-slate-600 text-xs leading-relaxed line-clamp-3">
+                    {s.description}
+                  </p>
+
+                  {/* Expected Impact Highlight */}
+                  {s.expectedImpact && (
+                    <div className="p-2.5 rounded-xl bg-white border border-slate-200/80 text-[11px] text-slate-700 space-y-0.5">
+                      <span className="text-[10px] font-bold uppercase text-emerald-800 block">
+                        Target Impact:
+                      </span>
+                      <p className="leading-normal">{s.expectedImpact}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Footer Bar */}
+                <div className="pt-3 border-t border-slate-200/80 flex items-center justify-between text-[11px] text-slate-500">
+                  <div className="min-w-0">
+                    <span className="font-bold text-slate-700 block truncate">
+                      {s.submittedBy}
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-mono">
+                      {s.referenceNumber}
+                    </span>
+                  </div>
+
+                  {/* Upvote Button */}
+                  <button
+                    onClick={() => handleToggleUpvote(s.id)}
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border transition-all cursor-pointer font-bold ${
+                      isUpvoted
+                        ? 'bg-emerald-100/80 border-emerald-300 text-emerald-900 shadow-2xs'
+                        : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100'
+                    }`}
+                    title="Endorse this sustainability idea"
+                  >
+                    <ThumbsUp className={`w-3.5 h-3.5 ${isUpvoted ? 'fill-emerald-800 text-emerald-800' : ''}`} />
+                    <span>{s.upvotes}</span>
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
       {/* Our Campus Sustainability Goals (Section 12) */}
       <section className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-10 space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
@@ -176,18 +470,33 @@ export const SustainabilityPage: React.FC<SustainabilityPageProps> = ({
           ))}
         </div>
 
-        <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-xs text-emerald-950 flex items-center justify-between">
-          <span>
-            Have an idea for campus conservation or a green initiative?
-          </span>
+        {/* Suggestion CTA Banner (Opens Submit Suggestion Window) */}
+        <div className="p-4 sm:p-5 bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 rounded-2xl border border-emerald-200 text-xs text-emerald-950 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="space-y-0.5">
+            <h4 className="font-bold text-sm text-emerald-950 flex items-center gap-1.5">
+              <Lightbulb className="w-4 h-4 text-emerald-700" />
+              Have an idea for campus conservation or a green initiative?
+            </h4>
+            <p className="text-slate-600 text-xs">
+              Submit your suggestion to be evaluated by Green Club monitors for practical implementation.
+            </p>
+          </div>
           <button
-            onClick={onNavigateToReport}
-            className="px-4 py-2 bg-emerald-800 text-white font-bold rounded-xl text-xs hover:bg-emerald-900 transition-colors"
+            onClick={() => setIsSuggestionModalOpen(true)}
+            className="px-5 py-2.5 bg-emerald-800 text-white font-bold rounded-xl text-xs hover:bg-emerald-900 transition-all shadow-md shadow-emerald-900/10 shrink-0 cursor-pointer flex items-center gap-1.5"
           >
-            Submit Suggestion
+            <Lightbulb className="w-3.5 h-3.5 text-emerald-300" />
+            <span>Submit Suggestion</span>
           </button>
         </div>
       </section>
+
+      {/* Dedicated Submit Suggestion Window / Modal */}
+      <SustainabilitySuggestionModal
+        isOpen={isSuggestionModalOpen}
+        onClose={() => setIsSuggestionModalOpen(false)}
+        onSuggestionSubmitted={handleSuggestionSubmitted}
+      />
     </div>
   );
 };

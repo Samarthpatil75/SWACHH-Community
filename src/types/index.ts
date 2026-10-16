@@ -260,3 +260,29 @@ export interface CampusQRTarget {
   description: string;
   recommendedPlacement: string;
 }
+
+export type SuggestionCategory =
+  | 'waste_recycling'
+  | 'water_conservation'
+  | 'energy_solar'
+  | 'greenery_biodiversity'
+  | 'hygiene_sanitation'
+  | 'campus_awareness';
+
+export interface SustainabilitySuggestion {
+  id: string;
+  referenceNumber: string;
+  title: string;
+  category: SuggestionCategory;
+  categoryLabel: string;
+  zoneName: string;
+  floor?: string;
+  description: string;
+  expectedImpact: string;
+  submittedBy: string;
+  submitterRole: UserRole;
+  upvotes: number;
+  status: 'under_review' | 'approved_for_pilot' | 'in_discussion' | 'implemented';
+  createdAt: string;
+}
+
