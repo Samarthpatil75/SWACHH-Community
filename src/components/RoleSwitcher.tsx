@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { UserRole } from '../types';
 import { useApp } from '../context/AppContext';
-import { ShieldCheck, UserCheck, Wrench, GraduationCap, ChevronDown, Check, Lock } from 'lucide-react';
+import { ShieldCheck, UserCheck, GraduationCap, ChevronDown, Check, Lock } from 'lucide-react';
 import { RoleLoginModal } from './RoleLoginModal';
 
 export const RoleSwitcher: React.FC = () => {
   const { currentRole, switchRole } = useApp();
   const [open, setOpen] = useState(false);
-  const [loginModalTarget, setLoginModalTarget] = useState<'green_club' | 'staff' | 'admin' | null>(null);
+  const [loginModalTarget, setLoginModalTarget] = useState<'green_club' | 'admin' | null>(null);
 
   const rolesConfig: { 
     role: UserRole; 
@@ -34,14 +34,6 @@ export const RoleSwitcher: React.FC = () => {
       requiresAuth: true,
     },
     {
-      role: 'staff',
-      label: 'Housekeeping / Maintenance Staff',
-      badge: 'Credentials Required',
-      desc: 'View assigned issues, update work progress, and record task completion with evidence.',
-      icon: <Wrench className="w-4 h-4 text-amber-600" />,
-      requiresAuth: true,
-    },
-    {
       role: 'admin',
       label: 'College Administration / Lead Admin',
       badge: 'Credentials Required',
@@ -65,7 +57,7 @@ export const RoleSwitcher: React.FC = () => {
     }
 
     // Prompt for Name and Password login info
-    setLoginModalTarget(role as 'green_club' | 'staff' | 'admin');
+    setLoginModalTarget(role as 'green_club' | 'admin');
   };
 
   return (
@@ -75,7 +67,7 @@ export const RoleSwitcher: React.FC = () => {
         className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-200 bg-emerald-50/80 hover:bg-emerald-100/90 text-emerald-900 transition-colors text-xs sm:text-sm font-medium shadow-xs cursor-pointer"
         aria-expanded={open}
         aria-haspopup="true"
-        title="Switch user perspective (Credentials required for staff and administration)"
+        title="Switch user perspective (Credentials required for Green Club and administration)"
       >
         <span className="p-1 rounded-md bg-white shadow-2xs">{currentConfig.icon}</span>
         <div className="text-left hidden md:block">
@@ -96,7 +88,7 @@ export const RoleSwitcher: React.FC = () => {
             <div className="px-3.5 py-2 border-b border-slate-100">
               <p className="text-xs font-bold text-slate-800">Switch User Perspective</p>
               <p className="text-[11px] text-slate-500">
-                Students report issues freely without login. Staff & administration roles require authorization credentials.
+                Students report issues freely without login. Green Club & administration roles require authorization credentials.
               </p>
             </div>
 
@@ -140,7 +132,7 @@ export const RoleSwitcher: React.FC = () => {
             </div>
 
             <div className="px-3.5 py-2 bg-slate-50 border-t border-slate-100 text-[10px] text-slate-500">
-              Institutional security: Staff and administrative accounts require verified Name and Password.
+              Institutional security: Green Club and administrative accounts require verified Name and Password.
             </div>
           </div>
         </>

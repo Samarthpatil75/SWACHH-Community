@@ -1,6 +1,4 @@
-// SWACHH Community - Type Definitions matching Database Schema & Roles
-
-export type UserRole = 'admin' | 'green_club' | 'staff' | 'student';
+export type UserRole = 'admin' | 'green_club' | 'student';
 
 export type DepartmentType = 
   | 'Housekeeping'
@@ -122,7 +120,7 @@ export interface IssueReport {
   observedAt: string;
   submittedAt: string;
   assignedDepartment?: DepartmentType;
-  assignedTo?: string; // staff name
+  assignedTo?: string; // assigned personnel name
   resolvedAt?: string;
   verifiedAt?: string;
   rejectionReason?: string;

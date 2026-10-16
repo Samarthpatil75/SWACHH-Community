@@ -231,7 +231,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const canManageFacilities = currentRole === 'admin';
   const canInspect = currentRole === 'admin' || currentRole === 'green_club';
   const canAssignIssues = currentRole === 'admin';
-  const canUpdateWorkStatus = currentRole === 'admin' || currentRole === 'staff' || currentRole === 'green_club';
+  const canUpdateWorkStatus = currentRole === 'admin' || currentRole === 'green_club';
   const canVerifyResolution = currentRole === 'admin' || currentRole === 'green_club';
   const canManageSchedules = currentRole === 'admin';
   const canExportData = currentRole === 'admin' || currentRole === 'green_club';

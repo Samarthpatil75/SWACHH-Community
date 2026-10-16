@@ -254,7 +254,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onSelectTab, onOpenSearch })
                 <Wrench className="w-4 h-4 text-amber-400" /> 3. Verify & Take Action
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Green Club monitors verify reports on-ground to filter out false alarms, while maintenance staff address approved work orders.
+                Green Club monitors verify reports on-ground to filter out false alarms, while administrative teams oversee approved work orders.
               </p>
             </div>
 

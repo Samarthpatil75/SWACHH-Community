@@ -63,7 +63,7 @@ export const SustainabilityPage: React.FC<SustainabilityPageProps> = ({
           Smarter Monitoring for a Greener Campus
         </h1>
         <p className="text-xs sm:text-base text-slate-600 leading-relaxed font-normal">
-          How centralized digital monitoring empowers students, maintenance staff, and administration to maintain an organized, hygienic, and sustainable campus environment.
+          How centralized digital monitoring empowers students, Green Club members, and administration to maintain an organized, hygienic, and sustainable campus environment.
         </p>
       </div>
 

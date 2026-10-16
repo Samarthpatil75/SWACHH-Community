@@ -34,16 +34,6 @@ export const INITIAL_PROFILES: UserProfile[] = [
     createdAt: '2026-09-02T10:30:00Z',
   },
   {
-    id: 'user-staff-1',
-    fullName: 'Ramesh Jadhav (Supervisor)',
-    email: 'ramesh.maintenance@icem.demo',
-    role: 'staff',
-    department: 'Housekeeping',
-    isActive: true,
-    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80',
-    createdAt: '2026-09-02T11:00:00Z',
-  },
-  {
     id: 'user-student-1',
     fullName: 'Neha Deshmukh (Student)',
     email: 'neha.student@icem.demo',
@@ -804,8 +794,8 @@ export const INITIAL_LOGS: ActivityLog[] = [
   },
   {
     id: 'log-02',
-    actorName: 'Ramesh Jadhav',
-    actorRole: 'staff',
+    actorName: 'Prof. S. R. Kulkarni',
+    actorRole: 'admin',
     entityType: 'issue',
     entityId: 'iss-1004',
     entityName: 'Disposed cups and plates in hedge area',
@@ -860,7 +850,7 @@ export const INITIAL_NOTIFICATIONS: AppNotification[] = [
   },
   {
     id: 'notif-02',
-    recipientRole: 'staff',
+    recipientRole: 'admin',
     type: 'info',
     title: 'New Maintenance Assignment',
     message: 'SW-2026-1001 (Overflowing dry waste bin) assigned to Housekeeping team.',

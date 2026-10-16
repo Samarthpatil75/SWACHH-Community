@@ -29,7 +29,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
     'Monitor cleaning, inspection, and maintenance schedules dynamically.',
     'Record maintenance requirements and verified actions taken.',
     'Help administrators identify recurring issues and overdue maintenance.',
-    'Improve coordination between Green Club members, housekeeping staff, maintenance teams, and college administration.',
+    'Improve coordination between Green Club members, campus maintenance teams, and college administration.',
     'Provide visibility into reported issues, current facility status, pending actions, and resolved issues.',
     'Support QR codes or identification labels for selected campus locations, subject to college permission.',
     'Encourage responsible campus participation and sustainability awareness.',
@@ -115,7 +115,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             The platform aims to provide a structured way to record observations, report issues, monitor maintenance schedules, document actions taken, and review the status of reported problems.
           </p>
           <p>
-            The system is intended to support coordination between students, authorized Green Club members, housekeeping and maintenance staff, and college administration. It complements existing college processes and does not replace physical inspections or official maintenance procedures.”
+            The system is intended to support coordination between students, authorized Green Club members, and college administration. It complements existing college processes and does not replace physical inspections or official maintenance procedures.”
           </p>
         </blockquote>
       </section>

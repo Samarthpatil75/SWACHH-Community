@@ -13,7 +13,6 @@ import {
   ShieldAlert,
   GraduationCap,
   UserCheck,
-  Wrench,
   ShieldCheck
 } from 'lucide-react';
 import { UserRole } from '../types';
@@ -164,16 +163,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           </div>
         )}
 
-        {/* 4-Role Selector Tabs */}
+        {/* 3-Role Selector Tabs */}
         <div className="space-y-1.5">
           <label className="block text-[11px] font-bold text-slate-700 uppercase">
             Select Your Role
           </label>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5 bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
             {[
               { role: 'student', label: 'Student', icon: <GraduationCap className="w-3.5 h-3.5" /> },
               { role: 'green_club', label: 'Green Club', icon: <UserCheck className="w-3.5 h-3.5" /> },
-              { role: 'staff', label: 'Staff', icon: <Wrench className="w-3.5 h-3.5" /> },
               { role: 'admin', label: 'Admin', icon: <ShieldCheck className="w-3.5 h-3.5" /> },
             ].map(tab => (
               <button

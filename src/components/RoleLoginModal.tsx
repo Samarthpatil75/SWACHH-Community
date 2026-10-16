@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import { 
   ShieldCheck, 
   UserCheck, 
-  Wrench, 
   GraduationCap,
   Lock, 
   User, 
@@ -79,30 +78,6 @@ export const ROLE_CREDENTIALS: Record<UserRole, RoleCredential> = {
       border: 'border-teal-200',
       text: 'text-teal-900',
       btn: 'bg-teal-800 hover:bg-teal-900',
-    },
-  },
-  staff: {
-    role: 'staff',
-    roleTitle: 'Housekeeping & Maintenance Staff',
-    badge: 'Work Order Execution',
-    defaultName: 'Ramesh Jadhav',
-    validNames: [
-      'ramesh jadhav',
-      'ramesh jadhav (supervisor)',
-      'ramesh',
-      'staff',
-      'housekeeping',
-      'ramesh.maintenance@icem.demo',
-    ],
-    defaultPassword: 'staff@icem',
-    passwords: ['staff@icem', 'staff123', 'icem2026'],
-    description: 'Requires housekeeping or maintenance staff credentials to view assigned work, update progress, and log completion evidence.',
-    icon: <Wrench className="w-5 h-5 text-amber-600" />,
-    themeColor: {
-      bg: 'bg-amber-50',
-      border: 'border-amber-200',
-      text: 'text-amber-900',
-      btn: 'bg-amber-800 hover:bg-amber-900',
     },
   },
   admin: {

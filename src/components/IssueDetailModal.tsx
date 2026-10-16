@@ -333,7 +333,7 @@ export const IssueDetailModal: React.FC<IssueDetailModalProps> = ({ issue, onClo
                 </div>
               )}
 
-              {/* Step B: In Progress Transition (Staff / Admin) */}
+              {/* Step B: In Progress Transition (Green Club / Admin) */}
               {canUpdateWorkStatus && issue.status !== 'verified_closed' && issue.status !== 'rejected' && (
                 <div className="p-4 rounded-xl border border-slate-200 bg-white space-y-3">
                   <h4 className="font-bold text-slate-900 flex items-center gap-2">
