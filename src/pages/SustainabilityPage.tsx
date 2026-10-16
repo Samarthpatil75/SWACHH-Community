@@ -38,7 +38,8 @@ const INITIAL_COMMUNITY_SUGGESTIONS: SustainabilitySuggestion[] = [
     zoneName: 'Garden & Lawns',
     description: 'Transition garden watering to automated early morning drip cycles (6:00 AM) to curb sidewalk water runoff and minimize mid-day evaporation losses.',
     expectedImpact: 'Estimated to conserve 450 liters of water daily while maintaining lawn vitality.',
-    submittedBy: 'Ananya Kulkarni (SE Civil)',
+    submittedBy: 'Ananya Kulkarni',
+    submitterDepartment: 'Civil Engineering',
     submitterRole: 'student',
     upvotes: 38,
     status: 'approved_for_pilot',
@@ -53,7 +54,8 @@ const INITIAL_COMMUNITY_SUGGESTIONS: SustainabilitySuggestion[] = [
     zoneName: 'Cafe Dil Se & Maggie Point',
     description: 'Introduce circular aperture bins specifically for disposable hot cups and soda cans to prevent coffee dregs from soaking dry recyclable paper and reduce bin overflow.',
     expectedImpact: 'Facilitates 100% clean sorting of over 200 daily beverage containers.',
-    submittedBy: 'Rohan Verma (TE Comp)',
+    submittedBy: 'Rohan Verma',
+    submitterDepartment: 'Computer Engineering',
     submitterRole: 'student',
     upvotes: 29,
     status: 'under_review',
@@ -69,7 +71,8 @@ const INITIAL_COMMUNITY_SUGGESTIONS: SustainabilitySuggestion[] = [
     floor: 'All Floors',
     description: 'Retrofit standard washbasin faucets with inexpensive mist/aerator nozzles to limit splashing and maintain cleansing pressure at 35% lower water flow rate.',
     expectedImpact: 'Estimated 35% reduction in washbasin water wastage during peak class change intervals.',
-    submittedBy: 'Aarav Sharma (Green Club Lead)',
+    submittedBy: 'Aarav Sharma',
+    submitterDepartment: 'Green Club / Civil Engineering',
     submitterRole: 'green_club',
     upvotes: 45,
     status: 'in_discussion',
@@ -402,10 +405,13 @@ export const SustainabilityPage: React.FC<SustainabilityPageProps> = ({
                 {/* Footer Bar */}
                 <div className="pt-3 border-t border-slate-200/80 flex items-center justify-between text-[11px] text-slate-500">
                   <div className="min-w-0">
-                    <span className="font-bold text-slate-700 block truncate">
+                    <span className="font-bold text-slate-800 block truncate">
                       {s.submittedBy}
                     </span>
-                    <span className="text-[10px] text-slate-400 font-mono">
+                    <span className="text-[10px] text-emerald-800 font-semibold block truncate">
+                      {s.submitterDepartment}
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-mono block">
                       {s.referenceNumber}
                     </span>
                   </div>

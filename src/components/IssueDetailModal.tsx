@@ -203,11 +203,16 @@ export const IssueDetailModal: React.FC<IssueDetailModalProps> = ({ issue, onClo
               {/* Meta Grid */}
               <div className="grid grid-cols-2 gap-4 text-slate-600">
                 <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-1">
-                  <div className="text-[10px] uppercase font-bold text-slate-400">Reporter</div>
+                  <div className="text-[10px] uppercase font-bold text-slate-400">Reporter (Mandatory)</div>
                   <div className="font-semibold text-slate-800 flex items-center gap-1.5">
                     <User className="w-3.5 h-3.5 text-slate-400" />
-                    {issue.reporterName || 'Anonymous Student'}
+                    <span>{issue.reporterName}</span>
                   </div>
+                  {issue.reporterDepartment && (
+                    <div className="text-[11px] font-bold text-emerald-800">
+                      Dept: {issue.reporterDepartment}
+                    </div>
+                  )}
                   {issue.reporterEmail && (
                     <div className="text-[11px] text-slate-400">{issue.reporterEmail}</div>
                   )}

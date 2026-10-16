@@ -307,13 +307,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     // Add activity log
     const newLog: ActivityLog = {
       id: `log-${Date.now()}`,
-      actorName: reportData.reporterName || 'Campus Reporter',
+      actorName: `${reportData.reporterName} (${reportData.reporterDepartment})`,
       actorRole: currentRole,
       entityType: 'issue',
       entityId: newIssue.id,
       entityName: newIssue.title,
       actionType: 'ISSUE_REPORTED',
-      description: `Report ${referenceNumber} filed for ${newIssue.facilityName}: ${newIssue.title}`,
+      description: `Report ${referenceNumber} filed by ${reportData.reporterName} (${reportData.reporterDepartment}) for ${newIssue.facilityName}: ${newIssue.title}`,
       createdAt: now,
     };
     setLogs(prev => [newLog, ...prev]);
@@ -324,7 +324,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       recipientRole: 'admin',
       type: reportData.priority === 'urgent' ? 'alert' : 'info',
       title: `New Report: ${referenceNumber}`,
-      message: `${newIssue.title} reported at ${newIssue.facilityName} (${reportData.priority.toUpperCase()} priority).`,
+      message: `${newIssue.title} reported at ${newIssue.facilityName} by ${reportData.reporterName} (${reportData.reporterDepartment}, ${reportData.priority.toUpperCase()} priority).`,
       link: '/issues',
       read: false,
       createdAt: now,
@@ -476,6 +476,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         zoneName: 'Assigned Campus Zone',
         categoryKey: 'general_facilities',
         reporterName: inspectionData.inspectorName,
+        reporterDepartment: 'Green Club Audit Team',
         issueType: 'Inspection Follow-up Required',
         title: `Observation flagged during inspection: ${inspectionData.facilityCode}`,
         description: inspectionData.observationNotes,

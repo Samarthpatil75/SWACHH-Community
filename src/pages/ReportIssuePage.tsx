@@ -74,6 +74,7 @@ export const ReportIssuePage: React.FC<ReportIssuePageProps> = ({
   const [priority, setPriority] = useState<IssuePriority>('medium');
   const [observedAt, setObservedAt] = useState(() => new Date().toISOString().slice(0, 16));
   const [reporterName, setReporterName] = useState('');
+  const [reporterDepartment, setReporterDepartment] = useState('');
   const [reporterEmail, setReporterEmail] = useState('');
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [submittedRef, setSubmittedRef] = useState<string | null>(null);
@@ -182,13 +183,27 @@ export const ReportIssuePage: React.FC<ReportIssuePageProps> = ({
       return;
     }
 
+    const cleanName = reporterName.trim();
+    const cleanDept = reporterDepartment.trim();
+
+    if (!cleanName) {
+      alert('Please enter your Full Name. Reporter Name is mandatory.');
+      return;
+    }
+
+    if (!cleanDept) {
+      alert('Please enter or select your Department / Branch. Department is mandatory.');
+      return;
+    }
+
     const newIssue = addIssueReport({
       facilityId: selectedFacility.id,
       facilityName: selectedFacility.name,
       facilityCode: selectedFacility.facilityCode,
       zoneName: selectedFacility.zoneName,
       categoryKey,
-      reporterName: reporterName.trim() || undefined,
+      reporterName: cleanName,
+      reporterDepartment: cleanDept,
       reporterEmail: reporterEmail.trim() || undefined,
       issueType,
       title: title.trim(),
@@ -629,33 +644,73 @@ export const ReportIssuePage: React.FC<ReportIssuePageProps> = ({
               </div>
             </div>
 
-            {/* Optional Reporter Info */}
-            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
+            {/* Mandatory Reporter Info */}
+            <div className="p-4 sm:p-5 bg-emerald-50/60 rounded-2xl border border-emerald-200 space-y-3.5">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-800">
-                  Reporter Identification (Optional)
+                <span className="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
+                  <User className="w-4 h-4 text-emerald-700" />
+                  Reporter Identification (Mandatory) *
                 </span>
-                <span className="text-[11px] text-slate-400">Anonymous by default</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded border border-emerald-300">
+                  Required by College
+                </span>
               </div>
+
+              <p className="text-[11px] text-slate-600 leading-relaxed">
+                Per institutional guidelines, providing your name and academic department is mandatory to ensure genuine issue tracking and facilitate on-site verification by Green Club members.
+              </p>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input
-                  type="text"
-                  value={reporterName}
-                  onChange={e => setReporterName(e.target.value)}
-                  placeholder="Your Full Name (optional)"
-                  className="px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs"
-                />
+                <div className="space-y-1">
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase">
+                    Your Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={reporterName}
+                    onChange={e => setReporterName(e.target.value)}
+                    placeholder="e.g. Neha Deshmukh"
+                    className="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase">
+                    Department / Academic Branch *
+                  </label>
+                  <select
+                    required
+                    value={reporterDepartment}
+                    onChange={e => setReporterDepartment(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
+                  >
+                    <option value="">Select Department / Branch *</option>
+                    <option value="Computer Engineering">Computer Engineering</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                    <option value="Civil Engineering">Civil Engineering</option>
+                    <option value="Electronics & Telecommunication (E&TC)">Electronics & Telecommunication (E&TC)</option>
+                    <option value="AI & Data Science">AI & Data Science</option>
+                    <option value="First Year Engineering (FE)">First Year Engineering (FE)</option>
+                    <option value="College Administration / Faculty">College Administration / Faculty</option>
+                    <option value="Other / Campus Member">Other / Campus Member</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-[11px] font-medium text-slate-600">
+                  Email Address (Optional — for resolution notifications)
+                </label>
                 <input
                   type="email"
                   value={reporterEmail}
                   onChange={e => setReporterEmail(e.target.value)}
-                  placeholder="Your Email for status updates (optional)"
-                  className="px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs"
+                  placeholder="e.g. neha.student@icem.demo"
+                  className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
                 />
               </div>
-              <p className="text-[10px] text-slate-500 leading-relaxed">
-                Contact information is encrypted and visible only to authorized administration. It is never exposed on the public dashboard.
-              </p>
             </div>
 
             <div className="pt-4 border-t border-slate-100 flex items-center justify-between">

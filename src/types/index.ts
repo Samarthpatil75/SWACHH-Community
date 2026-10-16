@@ -109,8 +109,9 @@ export interface IssueReport {
   facilityCode: string;
   zoneName: string;
   categoryKey: FacilityCategoryKey;
-  reportedBy?: string; // user id or undefined for anonymous
-  reporterName?: string;
+  reportedBy?: string;
+  reporterName: string; // Mandatory user full name
+  reporterDepartment: string; // Mandatory user department / branch
   reporterEmail?: string;
   issueType: string;
   title: string;
@@ -279,7 +280,8 @@ export interface SustainabilitySuggestion {
   floor?: string;
   description: string;
   expectedImpact: string;
-  submittedBy: string;
+  submittedBy: string; // Mandatory user name
+  submitterDepartment: string; // Mandatory user department / branch
   submitterRole: UserRole;
   upvotes: number;
   status: 'under_review' | 'approved_for_pilot' | 'in_discussion' | 'implemented';

@@ -122,6 +122,8 @@ export const SustainabilitySuggestionModal: React.FC<SustainabilitySuggestionMod
 
     const cleanTitle = title.trim();
     const cleanDesc = description.trim();
+    const cleanName = proposerName.trim();
+    const cleanDept = proposerDepartment.trim();
 
     if (!cleanTitle) {
       setError('Please provide a descriptive title for your sustainability suggestion.');
@@ -135,6 +137,16 @@ export const SustainabilitySuggestionModal: React.FC<SustainabilitySuggestionMod
 
     if (!cleanDesc) {
       setError('Please provide the details or proposed implementation for your idea.');
+      return;
+    }
+
+    if (!cleanName) {
+      setError('Please enter your Full Name. Name is mandatory.');
+      return;
+    }
+
+    if (!cleanDept) {
+      setError('Please enter or select your Department / Branch. Department is mandatory.');
       return;
     }
 
@@ -156,7 +168,8 @@ export const SustainabilitySuggestionModal: React.FC<SustainabilitySuggestionMod
       floor: floorInfo,
       description: cleanDesc,
       expectedImpact: expectedImpact.trim() || 'Contributes to a cleaner, greener, and more sustainable campus.',
-      submittedBy: proposerName.trim() || 'Anonymous Campus Member',
+      submittedBy: cleanName,
+      submitterDepartment: cleanDept,
       submitterRole: currentRole,
       upvotes: 1,
       status: 'under_review',
@@ -288,6 +301,9 @@ export const SustainabilitySuggestionModal: React.FC<SustainabilitySuggestionMod
                 <div className="text-[11px] text-slate-500">
                   <span className="font-bold">Zone:</span> {submittedData.zoneName}
                   {submittedData.floor && ` • ${submittedData.floor}`}
+                </div>
+                <div className="text-[11px] text-slate-700 pt-1 border-t border-slate-200">
+                  <span className="font-bold">Proposer:</span> {submittedData.submittedBy} <span className="text-emerald-800 font-semibold">({submittedData.submitterDepartment})</span>
                 </div>
               </div>
 
@@ -451,31 +467,60 @@ export const SustainabilitySuggestionModal: React.FC<SustainabilitySuggestionMod
                 />
               </div>
 
-              {/* Submitter Name / Role (Frictionless for Students) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                <div className="space-y-1">
-                  <label className="block text-slate-600 font-medium text-[11px]">
-                    Your Name (Optional / Anonymous if blank)
-                  </label>
-                  <input
-                    type="text"
-                    value={proposerName}
-                    onChange={e => setProposerName(e.target.value)}
-                    placeholder="e.g. Neha Deshmukh (Student)"
-                    className="w-full p-2.5 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
-                  />
+              {/* Mandatory Proposer Name & Department */}
+              <div className="p-3.5 bg-emerald-50/60 rounded-2xl border border-emerald-200 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold text-emerald-950 flex items-center gap-1.5 uppercase">
+                    Proposer Identification (Mandatory) *
+                  </span>
+                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded border border-emerald-300 uppercase">
+                    Required
+                  </span>
                 </div>
-                <div className="space-y-1">
-                  <label className="block text-slate-600 font-medium text-[11px]">
-                    Department / Class / Branch (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={proposerDepartment}
-                    onChange={e => setProposerDepartment(e.target.value)}
-                    placeholder="e.g. BE Computer Engineering"
-                    className="w-full p-2.5 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
-                  />
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="block text-slate-700 font-bold uppercase tracking-wide text-[11px]">
+                      Your Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={proposerName}
+                      onChange={e => {
+                        setProposerName(e.target.value);
+                        if (error) setError(null);
+                      }}
+                      placeholder="e.g. Neha Deshmukh"
+                      className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="block text-slate-700 font-bold uppercase tracking-wide text-[11px]">
+                      Department / Academic Branch *
+                    </label>
+                    <select
+                      required
+                      value={proposerDepartment}
+                      onChange={e => {
+                        setProposerDepartment(e.target.value);
+                        if (error) setError(null);
+                      }}
+                      className="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
+                    >
+                      <option value="">Select Department / Branch *</option>
+                      <option value="Computer Engineering">Computer Engineering</option>
+                      <option value="Information Technology">Information Technology</option>
+                      <option value="Mechanical Engineering">Mechanical Engineering</option>
+                      <option value="Civil Engineering">Civil Engineering</option>
+                      <option value="Electronics & Telecommunication (E&TC)">Electronics & Telecommunication (E&TC)</option>
+                      <option value="AI & Data Science">AI & Data Science</option>
+                      <option value="First Year Engineering (FE)">First Year Engineering (FE)</option>
+                      <option value="Green Club / Student Body">Green Club / Student Body</option>
+                      <option value="College Administration / Faculty">College Administration / Faculty</option>
+                      <option value="Other Campus Department">Other Campus Department</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
